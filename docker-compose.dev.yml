@@ -1,0 +1,42 @@
+version: '3'
+
+volumes:
+  invoice_postgres_data: {}
+
+services:
+  app:
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - "./app:/app"
+      - "./alembic:/alembic"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        IN_DEPLOYMENT: "false"
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:12.3
+    volumes:
+      - invoice_postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: aap_backend_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  node:
+    build:
+      context: .
+      dockerfile: ./compose/node/Dockerfile
+    image: invoicing_local_node
+    tty: true
+    volumes:
+      - .:/app
+      # http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html
+      - /app/node_modules
+    command: npm run build-and-watch
