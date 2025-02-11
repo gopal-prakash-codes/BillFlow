@@ -1,0 +1,45 @@
+
+{% macro marketing_navbar() %}
+<div class="relative max-w-7xl mx-auto px-4 sm:px-6" aria-label="Global">
+    <div style="width: 100%;" class="flex items-center justify-between relative">
+        <div style="position: relative; margin-right: 3rem; margin-left: 1.5rem; z-index: 10;">
+            <img id="logo-img" src="/static/images/logo-color-50x50.png" alt="company logo">
+        </div>
+        <div class="flex justify-between nav-links menu py-4" id="menu-links" style="width: 100%; background-color: rgb(250, 252, 252);">
+            <nav>
+                <a href="/landing" class="text-slate-800 hover:text-slate-600 hover:underline px-3 py-2 rounded-md text-sm font-medium"> Home </a>
+                <a href="/how-it-works" class="text-slate-800 hover:underline hover:text-slate-600 px-3 py-2 rounded-md text-sm font-medium"> How it Works </a>
+                <a href="/landing#pricing" class="text-slate-800 hover:underline hover:text-slate-600 px-3 py-2 rounded-md text-sm font-medium"> Pricing </a>
+                <a href="/landing#faq-section" class="text-slate-800 hover:underline hover:text-slate-600 px-3 py-2 rounded-md text-sm font-medium"> FAQ </a>
+                <a href="/about-us" class="text-slate-800 hover:underline hover:text-slate-600 px-3 py-2 rounded-md text-sm font-medium"> About Us </a>
+                <a href="/blog" class="text-slate-800 hover:underline hover:text-slate-600 px-3 py-2 rounded-md text-sm font-medium"> Blog </a> 
+            </nav>
+            <div>
+                <a href="https://calendly.com/sharp-edge" target="_blank" class="inline-flex items-center py-2 px-4 mr-3 border-red-800 border border-indigo-500 border-2 rounded-md shadow-sm text-sm font-medium text-indigo-600 focus:outline-none focus:ring-offset-2"> BOOK A CALL </a>
+                <a href="/login" class="inline-flex items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"> Log in </a>
+            </div>
+        </div>
+        <div class="hamburger cursor-pointer" id="ham" onclick="showMenuLinks()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>                
+        </div>
+    </div>
+</div>
+
+<script>
+    if (screen.availWidth < 780) {
+        document.getElementById('logo-img').src = '/static/images/logo-color-20x20.png';
+    } else {
+        document.getElementById('logo-img').src = '/static/images/logo-color-50x50.png';
+    }
+    function showMenuLinks() {
+        let menuLink = document.getElementById('menu-links');
+        if (menuLink.classList.contains('nav-links')) {
+            menuLink.classList.remove('nav-links');
+        } else {
+            menuLink.classList.add('nav-links');
+        }
+    }
+</script>
+{% endmacro %}

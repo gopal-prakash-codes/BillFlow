@@ -1,0 +1,76 @@
+<div tabindex="-1" id="paid-details-popup" aria-hidden="true"
+class="overflow-y-auto overflow-x-hidden hidden fixed top-0 right-0 left-50 z-50 w-full md:inset-0 h-modal md:h-full pt-8" style="height: 100vh;">
+<div class="relative p-4 w-full max-w-2xl h-full md:h-auto mx-auto">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg dark:bg-gray-700" style="box-shadow: 0px 4px 8px 0px rgb(218, 217, 217);">
+        <!-- Modal header -->
+        <div class="flex flex-row justify-between p-4 rounded-t border-b dark:border-gray-600">
+            <div class="flex flex-row mb-6" style="align-items: center;">
+                <h1 class="text-xl font-semibold font-bold prose">
+                    Details:
+                </h1>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" onclick="closeBtn()" class="h-8 w-8 prose hover:text-green-800 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <!-- Modal Body -->
+        <div class="flex flex-col p-6 text-left mx-auto" >
+            <table>
+                <tr>
+                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Vendor:</th>
+                  <td id="paid-detail__vendor_name"></td>
+                </tr>
+                <tr>
+                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Invoice Number:</th>
+                  <td id="paid-detail__invoice_num"></td>
+                </tr>
+                <tr>
+                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Paid Date:</th>
+                  <td id="paid-detail__paid_date">23 Oct, 2022</td>
+                </tr>
+                <tr>
+                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Paid Amount:</th>
+                    <td id="paid-detail__amount"></td>
+                </tr>
+                <tr>
+                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Type</th>
+                    <td id="paid-detail__category"></td>
+                </tr>
+                <tr>
+                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Account:</th>
+                    <td id="paid-detail__account"></td>
+                </tr>
+                <tr>
+                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Account Number:</th>
+                    <td id="paid-detail__account_num"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    function openPopup(category, invoice_id) {
+        fetch(`/payment-detail/${invoice_id}`, {
+                method: 'GET'
+            })
+            .then((response) => response.json())
+            .then(data => {
+                document.getElementById('paid-detail__vendor_name').innerHTML = data.vendor_name;
+                document.getElementById('paid-detail__invoice_num').innerHTML = data.invoice_number;
+                document.getElementById('paid-detail__amount').innerHTML = `$ ${data.amount}`;
+                document.getElementById('paid-detail__category').innerHTML = data.type;
+                document.getElementById('paid-detail__paid_date').innerHTML = data.paid_date;
+                document.getElementById('paid-detail__account_num').innerHTML = data.account_number;
+                document.getElementById('paid-detail__account').innerHTML = data.account;
+
+            })
+        document.getElementById('paid-details-popup').classList.remove('hidden');
+    }
+
+    function closeBtn() {
+        document.getElementById('paid-details-popup').classList.add('hidden');
+    }
+</script>

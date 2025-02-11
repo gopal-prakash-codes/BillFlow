@@ -1,0 +1,408 @@
+{% macro single_invoice_view(invoice_data, approvers, user_type='customer', is_approver_sub_paid=False, token=None, is_waiting_for_approval=False) %}
+{% from "components/invoices/add-category.html" import add_category_form %}
+{% from "components/invoices/invoice-dropdown-menu.html" import invoice_dropdown_menu %}
+
+<div x-data class="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full">
+
+        <section class="mb-8">
+            {% if user_type == 'accountant' %}
+            <div class="mb-4">
+                <a href="/accountant/invoice-list?token={{token}}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    << Back to Invoice Search
+                </a>
+            </div>
+            {% endif %}
+            <div class="flex justify-between items-center">
+                <h2 class="font-extrabold text-3xl text-gray-800">
+                    {% if user_type == 'approver' %}
+                        Approval Request
+                    {% else %}
+                        Invoice Details
+                    {% endif %}
+                </h2>
+                {% if user_type == 'approver' %}
+                {% if not invoice_data.is_rejected and not invoice_data.is_approved %}
+                <div class="flex items-center">
+                    <div class="mr-3">
+                        <button class="inline-flex items-center px-3 py-2 ml-4 border border-indigo-500 text-sm text-indigo-700 leading-4 font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="download-attach-btn" onclick="downloadAttachment()">Download attachments</button>
+                    </div>
+                    <div class="mr-3">
+                        <form class="flex items-center justify-center mb-0" action="/approval/approve/{{invoice_data.id}}" method="POST">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Approve
+                            </button>
+                        </form>
+                    </div>
+                    <div>
+                        <form class="flex items-center justify-center mb-0" action="/approval/reject/{{invoice_data.id}}" method="POST">
+                            <button id="rejectBtn" onclick="showRejectModal()" type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Reject
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                {% if invoice_data.is_approved %}
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Approved
+                    </button>
+                </div>
+                {% endif %}
+                {% if invoice_data.is_rejected %}
+                <div>
+                    <button id="rejectBtn" onclick="showRejectModal()" type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Rejected
+                    </button>
+                </div>
+                {% endif %}
+                {% endif %}
+                {% else %}
+
+                <div class="flex items-center">
+                    {% if not invoice_data.is_paid %}
+                    <!-- <form class="flex items-center justify-center mb-0" action="/invoices/{{invoice_data.id}}?paid=True" method="POST">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Mark as Paid
+                        </button>
+                    </form> -->
+                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="mark-as-paid-btn">
+                        Mark as Paid
+                    </button>
+                    {% else %}
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <!-- Heroicon name: solid/check-circle -->
+                            <svg class="h-10 w-10 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-2">
+                            <h3 class="text-lg font-medium text-green-800">Invoice Paid</h3>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="ml-4">  
+                        {{invoice_dropdown_menu(invoice_data, user_type, is_waiting_for_approval)}}
+                    </div>
+                    {% if not invoice_data.is_paid and user_type != 'approver' %}
+                    {% if is_approver_sub_paid and ( not invoice_data.is_approved and not is_waiting_for_approval ) %}
+                    <div>
+                        <button class="inline-flex items-center px-3 py-2 ml-4 border border-indigo-500 text-sm text-indigo-700 leading-4 font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="req-approval-btn">REQUEST APPROVAL</button>
+                    </div>
+                    {% endif %}
+                    {% if is_approver_sub_paid and user_type == 'customer' %}
+                    <div>
+                        <button class="inline-flex items-center px-3 py-2 ml-4 border border-indigo-500 text-sm text-indigo-700 leading-4 font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="attach-doc-btn">ATTACH A DOCUMENT</button>
+                    </div>
+                    {% endif %}
+                    {% if user_type == 'approver' %}
+                    <div>
+                        <button class="inline-flex items-center px-3 py-2 ml-4 border border-indigo-500 text-sm text-indigo-700 leading-4 font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="req-approval-btn">VIEW ATTACHMENTS</button>
+                    </div>
+                    {% endif %}
+                    {% if not invoice_data.is_rejected and is_waiting_for_approval %}
+                        <div>
+                            <button class="inline-flex items-center px-3 py-2 ml-4 leading-4 font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="background-color: #FF8FB1;">Waiting For Approval</button>
+                        </div>
+                    {% endif %}
+                    {% if invoice_data.is_approved %}
+                        <div>
+                            <button class="inline-flex justify-center px-3 py-2 ml-4 leading-4 font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="background-color: #21E1E1;">Approved</button>
+                        </div>
+                    {% endif %}
+                    {% if invoice_data.is_rejected %}
+                    <div>
+                        <button id="rejectBtn" onclick="showRejectModal()" type="button" class="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Rejected
+                        </button>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            {% if invoice_data.is_rejected %}
+            <div class="border border-red-400 text-red-700 px-4 py-3 rounded mb-5 mt-5" style="background-color: #f8ebd3;">
+                <h3 class="text-xl">Rejection Reasons:</h3>
+                <p class="block sm:inline font-bold">{% if invoice_data.rejection_reason %}{{ invoice_data.rejection_reason }}{% else %}No reason for rejection is provided{% endif %}</p>
+            </div>
+            {% endif %}
+
+            <div class="grid grid-cols-4 gap-5 mt-6">
+                <div class="flex flex-col">
+                    <span class="text-sm font-medium text-gray-500">Due Date</span>
+                    <span class="mt-1 text-lg font-medium text-gray-900">{{invoice_data.american_due_date}}</span>
+                </div>
+
+                <div class="flex flex-col">
+                    <span class="text-sm font-medium text-gray-500">Vendor Name</span>
+                    <span class="mt-1 text-lg font-medium text-gray-900" id="vendor-name">{{invoice_data.vendor_name}}</span>
+                </div>
+
+                <div class="flex flex-col">
+                    <span class="text-sm font-medium text-gray-500">Amount Due</span>
+                    {% if invoice_data.currency %}
+                        <span class="mt-1 text-lg font-medium text-gray-900">{{ invoice_data.currency_symbol }} {{invoice_data.amount_due}}</span>
+                    {% else %}
+                        <span class="mt-1 text-lg font-medium text-gray-900">${{invoice_data.amount_due}}</span>
+                    {% endif%}
+                </div>
+
+                <div class="flex flex-col">
+                    <span class="text-sm font-medium text-gray-500">Invoice No.</span>
+                    <span class="mt-1 text-lg font-medium text-gray-900">{{invoice_data.invoice_id}}</span>
+                </div>
+            </div>
+
+            <div class="flex flex-row items-center mt-5 ">
+                <div style="width: 70%;">
+                    {{ add_category_form(invoice_data) }}
+                </div>
+                <div class="flex-1 font-bold text-xl" style="color: rgb(61, 162, 245);">
+                    <a href="https://checkeeper.com/check-mailing" target="_blank">Pay with Checkeeper.com</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="p-6 w-full mx-auto flex justify-center items-center">
+            {% if not invoice_data.invoice_id %}
+            <p class="text-center" id="image-not-found">Image Not Found.</p>
+            {% else %}
+            {% if user_type == 'approver' or user_type == 'accountant' %}
+            <img src="/invoice_image/{{ invoice_data.id }}" alt="Invoice {{ invoice_data.invoice_id }}">
+            {% else %}
+            <img src="/invoice_images/{{ invoice_data.id }}" alt="Invoice {{ invoice_data.invoice_id }}">
+            {% endif %}
+            {% endif %}
+        </div>
+
+        {% if not invoice_data.is_paid %}
+            {% include "components/invoices/payment-detail-modal.html" %}
+        {% endif %}
+
+    </div>
+</div>
+
+<div id="req-approver-popup" tabindex="-1" aria-hidden="true"
+    class="overflow-y-auto overflow-x-hidden hidden fixed top-0 w-100 right-0 left-50 z-50 w-full md:inset-0 h-modal md:h-full pt-8 backdrop-blur"
+    style="height: 100vh;">
+    <div class="relative p-4 w-full max-w-2xl h-full md:h-auto" style="margin: auto;">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg dark:bg-gray-700"
+            style="box-shadow: 0px 4px 8px 0px rgb(218, 217, 217);">
+            <!-- Modal header -->
+            <div class="flex flex-row justify-between items-center items-start p-4 rounded-t border-b dark:border-gray-600">
+                <div>
+                    <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Add Approval
+                    </h1>
+                </div>
+                <div>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent close-approver-modal-btn hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!-- Modal Body -->
+            <form class="flex flex-col border border-gray-300 p-6" id="req-approver-form" action="/approver/request/{{invoice_data.id}}" method="POST">
+                {% if approvers|length > 0 %}
+                <div class="flex flex-row mb-5" id="select-approver-input">
+                    {% for approver in approvers %}
+                    <div
+                        class="mr-2 c rounded-full p-1 flex flex-row justify-between items-center bg-indigo-100 border">
+                        <input type="radio" name="approver_id" class="cursor-pointer" value="{{approver.id}}" />
+                        <label class="text-indigo-700 select-input"
+                            for="approver_id">&nbsp;&nbsp;{{
+                            approver.first_name }} {{ approver.last_name }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit"
+                    class="flex justify-center py-2 px-4 border border-indigo-500 rounded-md shadow-sm text-sm font-medium text-white text-indigo-700 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-full" style="width: fit-content;"
+                    type="button" data-modal-toggle="defaultModal">Send Request
+                </button>
+                {% else %}
+                <div>
+                    <h3>You haven't invited any approver for invoice approval. <a href="/settings/account" class="text-indigo-700 underline">Click here</a> to invite an approver.</h3>
+                    <h4 class="text-indigo-700 underline" target="_blank"><a href="https://myeasyinvoicemanager.freshdesk.com/support/solutions/articles/73000590779-approval-configurations-must-match-invoice">How to configure?</a></h4>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="upload-attachment-popup" tabindex="-1" aria-hidden="true"
+    class="overflow-y-auto overflow-x-hidden hidden fixed top-0 w-100 right-0 left-50 z-50 w-full md:inset-0 h-modal md:h-full pt-8 backdrop-blur"
+    style="height: 100vh;">
+    <div class="relative p-4 w-full max-w-2xl h-full md:h-auto" style="margin: auto;">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg dark:bg-gray-700"
+            style="box-shadow: 0px 4px 8px 0px rgb(218, 217, 217);">
+            <!-- Modal header -->
+            <div class="flex flex-row justify-between items-center items-start p-4 rounded-t border-b dark:border-gray-600">
+                <div>
+                    <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Select Type Of Document
+                    </h1>
+                </div>
+                <div>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent close-upload-doc-modal-btn hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!-- Modal Body -->
+            <form class="flex flex-col border border-gray-300 p-6" id="req-approver-form" enctype="multipart/form-data" action="/upload-attachment/{{invoice_data.id}}" method="POST">
+                <div class="px-6 py-4 flex flex-row justify-between items-center">
+                    <div>
+                        <h3 class="text-indigo-600 text-xl">Type</h3>
+                        <select class="form-control text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none mt-5" name="attachment_type" style="width: 200px;">
+                            <option value="">None</option>
+                            <option value="Purchase Order">Purchase Order</option>
+                            <option value="Receiving report">Receiving Report</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <h3 class="text-indigo-600 text-xl">Select Document</h3>
+                        <input type="file" name="attachment" id="file" class="inputfile" />
+                    </div>
+                </div>
+                <button type="submit"
+                        class="flex justify-center py-2 px-6 border border-indigo-500 rounded-md shadow-sm text-sm font-medium text-white text-indigo-700 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-full" style="width: fit-content; margin-left: 1.5rem;"
+                        type="button" data-modal-toggle="defaultModal">Upload
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if user_type == 'customer' %}
+<script>
+    document.getElementById('mark-as-paid-btn')?.addEventListener('click', () => {
+        document.getElementById('payment-detail-modal').classList.remove('hidden');
+    });
+
+</script>
+
+<script>
+    const req_approver_popup = document.getElementById('req-approver-popup');
+    const uploadAttachmentPopup = document.getElementById('upload-attachment-popup');
+
+    document.getElementById('req-approval-btn')?.addEventListener('click', () => {
+        req_approver_popup.classList.remove('hidden');
+    });
+
+    document.querySelector('.close-approver-modal-btn')?.addEventListener('click', () => {
+        req_approver_popup.classList.add('hidden');
+     });
+
+     document.getElementById('attach-doc-btn')?.addEventListener('click', () => {
+        uploadAttachmentPopup.classList.remove('hidden');
+    });
+
+    document.querySelector('.close-upload-doc-modal-btn')?.addEventListener('click', () => {
+        uploadAttachmentPopup.classList.add('hidden');
+     });
+</script>
+{% endif %}
+
+<script>
+    function showRejectModal() {
+        const rejectionCard = document.getElementById('approver-rejection-card');
+        rejectionCard.classList.remove('hidden');
+    }
+
+    function hideRejectModal() {
+        const rejectionCard = document.getElementById('approver-rejection-card');
+        rejectionCard.classList.add('hidden');
+    }
+
+    function uploadAttachment(form) {
+        const data = new FormData(form);
+
+        const invoiceId = window.location.href.split('/')[4];
+        
+        fetch(`/upload-attachment/${invoiceId}`, {
+            method: 'POST',
+            body: data
+        })
+        .then(response => response.json())
+    }
+
+    function downloadAttachment() {
+        const invoice_token = window.location.href.split('/')[4];
+        let token = invoice_token.replace("invoice", "");
+        fetch(`/download-attachment${token}`, {
+            method: 'get'
+        })
+        .then(response => {
+            var contentType = response.headers.get('Content-Type');
+            if (contentType == 'application/json') {
+                console.log("No attachments found");
+                
+                // Add the error parameter to the current URL
+                const currentURL = window.location.href;
+                const errorParam = 'error=No attachments found';
+                const separator = currentURL.includes('?') ? '&' : '?';
+                const newURL = `${currentURL}${separator}${errorParam}`;
+                
+                window.location.href = newURL;
+            } else if (contentType == 'application/zip') {
+                return response.blob().then(blob => {
+                    if (!blob) {
+                        console.error('Error: Empty response');
+                        return;
+                    }
+    
+                    // Create a Blob URL for the blob
+                    const url = window.URL.createObjectURL(blob);
+    
+                    // Create a link element and trigger a click event to start the download
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${invoiceId}_attachments.zip`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+    
+                    // Revoke the Blob URL to free up resources
+                    window.URL.revokeObjectURL(url);
+                });
+            }
+        })
+    }
+
+</script>
+
+{% if not invoice_data.invoice_id %}
+<script>
+    const invoiceIdForEmail = window.location.href.split('/')[4];
+    fetch("/not-found-email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              invoice_id: invoiceIdForEmail
+            }),
+          })
+            .then((data) => {})
+</script>
+{% endif %}
+
+{% endmacro %}

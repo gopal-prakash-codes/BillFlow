@@ -1,0 +1,166 @@
+{% macro approver_tier_card(tier_setting_1, tier_setting_2, tier_setting_3) %}
+<form action="/approver/tier/add", method="POST">
+  <div class="rounded overflow-hidden shadow-lg mt-5" style="width: 60%;">
+      <div class="px-6 py-4">
+        <div class="font-bold text-2xl mb-2 text-indigo-600">Tier 1</div>
+      </div>
+      <div class="px-6 py-4 flex flex-row justify-between">
+        <div>
+            <h3 class="text-indigo-600 text-xl">From</h3>
+            <input type="number" min="0" name="amount_from_tier1" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md mt-4" placeholder="$ 1,000" required {% if tier_setting_1 %}value="{{ tier_setting_1.amount_from }}"{% endif %}>
+        </div>
+    
+        <div>
+            <h3 class="text-indigo-600 text-xl">To</h3>
+            <input type="number" min="0" name="amount_to_tier1" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md mt-4" placeholder="$ 5,000" required {% if tier_setting_1 %}value="{{ tier_setting_1.amount_to }}"{% endif %}>
+        </div>
+      </div>
+      <div class="px-6 py-4 flex flex-row justify-between items-center">
+        <div>
+            <h3 class="text-indigo-600 text-xl">Category</h3>
+            <select class="form-control text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none mt-5" name="category_tier1" style="width: 130px;">
+              <option value="None" {% if tier_setting_1 and tier_setting_1.category == 'None'%}selected{% endif %}>None</option>
+              <option value="Purchases" {% if tier_setting_1 and tier_setting_1.category == 'Purchases'%}selected{% endif %}>Purchases</option>
+              <option value="Maintenance and Repair" {% if tier_setting_1 and tier_setting_1.category == 'Maintenance and Repair'%}selected{% endif %}>Maintenance and Repair</option>
+              <option value="Entertainment" {% if tier_setting_1 and tier_setting_1.category == 'Entertainment'%}selected{% endif %}>Entertainment</option>
+              <option value="Travel" {% if tier_setting_1 and tier_setting_1.category == 'Travel'%}selected{% endif %}>Travel</option>
+              <option value="Equipment" {% if tier_setting_1 and tier_setting_1.category == 'Equipment'%}selected{% endif %}>Equipment</option>
+              <option value="Internet" {% if tier_setting_1 and tier_setting_1.category == 'Internet'%}selected{% endif %}>Internet</option>
+              <option value="Hosting" {% if tier_setting_1 and tier_setting_1.category == 'Hosting'%}selected{% endif %}>Hosting</option>
+              <option value="Furniture" {% if tier_setting_1 and tier_setting_1.category == 'Furniture'%}selected{% endif %}>Furniture</option>
+              <option value="Office Supplies" {% if tier_setting_1 and tier_setting_1.category == 'Office Supplies'%}selected{% endif %}>Office Supplies</option>
+              <option value="Vehicles" {% if tier_setting_1 and tier_setting_1.category == 'Vehicles'%}selected{% endif %}>Vehicles</option>
+              <option value="Accommodation" {% if tier_setting_1 and tier_setting_1.category == 'Accommodation'%}selected{% endif %}>Accommodation</option>
+              <option value="Continuing Education" {% if tier_setting_1 and tier_setting_1.category == 'Continuing Education'%}selected{% endif %}>Continuing Education</option>
+              <option value="Conferences And Seminars" {% if tier_setting_1 and tier_setting_1.category == 'Conferences And Seminars'%}selected{% endif %}>Conferences And Seminars</option>
+              <option value="Professional Fees" {% if tier_setting_1 and tier_setting_1.category == 'Professional Fees'%}selected{% endif %}>Professional Fees</option>
+              <option value="Marketing and Advertising" {% if tier_setting_1 and tier_setting_1.category == 'Marketing and Advertising'%}selected{% endif %}>Marketing and Advertising</option>
+              <option value="Business Insurance" {% if tier_setting_1 and tier_setting_1.category == 'Business Insurance'%}selected{% endif %}>Business Insurance</option>
+              <option value="Software and Subscription Services" {% if tier_setting_1 and tier_setting_1.category == 'Software and Subscription Services'%}selected{% endif %}>Software and Subscription Services</option>
+              <option value="Computer Repair" {% if tier_setting_1 and tier_setting_1.category == 'Computer Repair'%}selected{% endif %}>Computer Repair</option>
+              <option value="Fuel" {% if tier_setting_1 and tier_setting_1.category == 'Fuel'%}selected{% endif %}>Fuel</option>
+              <option value="Uncategorized Expenses" {% if tier_setting_1 and tier_setting_1.category == 'Uncategorized Expenses'%}selected{% endif %}>Uncategorized Expenses</option>
+              <option value="Other" {% if tier_setting_1 and tier_setting_1.category == 'Other'%}selected{% endif %}>Other</option>
+            </select>
+        </div>
+        <div>
+          <h3 class="text-indigo-600 text-xl">Role</h3>
+          <input type="text" min="0" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md mt-4" name="role_tier1" {% if tier_setting_1 %}value="{{ tier_setting_1.role }}"{% endif %}>
+        </div>
+      </div>
+  </div>
+  <div class="rounded overflow-hidden shadow-lg mt-5" style="width: 60%;">
+    <div class="px-6 py-4">
+      <div class="font-bold text-2xl mb-2 text-indigo-600">Tier 2</div>
+    </div>
+    <div class="px-6 py-4 flex flex-row justify-between">
+      <div>
+          <h3 class="text-indigo-600 text-xl">From</h3>
+          <input type="number" min="0" name="amount_from_tier2" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md" placeholder="$ 1,000" {% if tier_setting_2 %}value="{{ tier_setting_2.amount_from }}"{% endif %}>
+      </div>
+
+      <div>
+          <h3 class="text-indigo-600 text-xl">To</h3>
+          <input type="number" min="0" name="amount_to_tier2" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md" placeholder="$ 5,000" {% if tier_setting_2 %}value="{{ tier_setting_2.amount_to }}"{% endif %}>
+      </div>
+    </div>
+    <div class="px-6 py-4 flex flex-row justify-between">
+      <div>
+          <h3 class="text-indigo-600 text-xl">Category</h3>
+          <select class="form-control text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none mt-5" name="category_tier2" style="width: 130px;">
+            <option value="None" {% if tier_setting_1 and tier_setting_2.category == 'None'%}selected{% endif %}>None</option>
+            <option value="Purchases" {% if tier_setting_2 and tier_setting_2.category == 'Purchases'%}selected{% endif %}>Purchases</option>
+            <option value="Maintenance and Repair" {% if tier_setting_2 and tier_setting_2.category == 'Maintenance and Repair'%}selected{% endif %}>Maintenance and Repair</option>
+            <option value="Entertainment" {% if tier_setting_2 and tier_setting_2.category == 'Entertainment'%}selected{% endif %}>Entertainment</option>
+            <option value="Travel" {% if tier_setting_2 and tier_setting_2.category == 'Travel'%}selected{% endif %}>Travel</option>
+            <option value="Equipment" {% if tier_setting_2 and tier_setting_2.category == 'Equipment'%}selected{% endif %}>Equipment</option>
+            <option value="Internet" {% if tier_setting_2 and tier_setting_2.category == 'Internet'%}selected{% endif %}>Internet</option>
+            <option value="Hosting" {% if tier_setting_2 and tier_setting_2.category == 'Hosting'%}selected{% endif %}>Hosting</option>
+            <option value="Furniture" {% if tier_setting_2 and tier_setting_2.category == 'Furniture'%}selected{% endif %}>Furniture</option>
+            <option value="Office Supplies" {% if tier_setting_2 and tier_setting_2.category == 'Office Supplies'%}selected{% endif %}>Office Supplies</option>
+            <option value="Vehicles" {% if tier_setting_2 and tier_setting_2.category == 'Vehicles'%}selected{% endif %}>Vehicles</option>
+            <option value="Accommodation" {% if tier_setting_2 and tier_setting_2.category == 'Accommodation'%}selected{% endif %}>Accommodation</option>
+            <option value="Continuing Education" {% if tier_setting_2 and tier_setting_2.category == 'Continuing Education'%}selected{% endif %}>Continuing Education</option>
+            <option value="Conferences And Seminars" {% if tier_setting_2 and tier_setting_2.category == 'Conferences And Seminars'%}selected{% endif %}>Conferences And Seminars</option>
+            <option value="Professional Fees" {% if tier_setting_2 and tier_setting_2.category == 'Professional Fees'%}selected{% endif %}>Professional Fees</option>
+            <option value="Marketing and Advertising" {% if tier_setting_2 and tier_setting_2.category == 'Marketing and Advertising'%}selected{% endif %}>Marketing and Advertising</option>
+            <option value="Business Insurance" {% if tier_setting_2 and tier_setting_2.category == 'Business Insurance'%}selected{% endif %}>Business Insurance</option>
+            <option value="Software and Subscription Services" {% if tier_setting_2 and tier_setting_2.category == 'Software and Subscription Services'%}selected{% endif %}>Software and Subscription Services</option>
+            <option value="Computer Repair" {% if tier_setting_2 and tier_setting_2.category == 'Computer Repair'%}selected{% endif %}>Computer Repair</option>
+            <option value="Fuel" {% if tier_setting_2 and tier_setting_2.category == 'Fuel'%}selected{% endif %}>Fuel</option>
+            <option value="Uncategorized Expenses" {% if tier_setting_2 and tier_setting_2.category == 'Uncategorized Expenses'%}selected{% endif %}>Uncategorized Expenses</option>
+            <option value="Other" {% if tier_setting_2 and tier_setting_2.category == 'Other'%}selected{% endif %}>Other</option>
+          </select>
+      </div>
+      <div>
+        <h3 class="text-indigo-600 text-xl">Role</h3>
+        <input type="text" min="0" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md mt-4" name="role_tier2" {% if tier_setting_1 %}value="{{ tier_setting_1.role }}"{% endif %}>
+      </div>
+    </div>
+  </div>
+  <div class="rounded overflow-hidden shadow-lg mt-5" style="width: 60%;">
+    <div class="px-6 py-4">
+      <div class="font-bold text-2xl mb-2 text-indigo-600">Tier 3</div>
+    </div>
+    <div class="px-6 py-4 flex flex-row justify-between">
+      <div>
+          <h3 class="text-indigo-600 text-xl">From</h3>
+          <input type="number" min="0" name="amount_from_tier3" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md" placeholder="$ 1,000" {% if tier_setting_3 %}value="{{ tier_setting_3.amount_from }}"{% endif %}>
+      </div>
+
+      <div>
+          <h3 class="text-indigo-600 text-xl">To</h3>
+          <input type="number" min="0" name="amount_to_tier3" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md" placeholder="$ 5,000" {% if tier_setting_3 %}value="{{ tier_setting_3.amount_to }}"{% endif %}>
+      </div>
+    </div>
+    <div class="px-6 py-4 flex flex-row justify-between">
+      <div>
+          <h3 class="text-indigo-600 text-xl">Category</h3>
+          <select class="form-control text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none mt-5" name="category_tier3" style="width: 130px;">
+            <option value="None" {% if tier_setting_1 and tier_setting_3.category == 'None'%}selected{% endif %}>None</option>
+            <option value="Purchases" {% if tier_setting_3 and tier_setting_3.category == 'Purchases'%}selected{% endif %}>Purchases</option>
+            <option value="Maintenance and Repair" {% if tier_setting_3 and tier_setting_3.category == 'Maintenance and Repair'%}selected{% endif %}>Maintenance and Repair</option>
+            <option value="Entertainment" {% if tier_setting_3 and tier_setting_3.category == 'Entertainment'%}selected{% endif %}>Entertainment</option>
+            <option value="Travel" {% if tier_setting_3 and tier_setting_3.category == 'Travel'%}selected{% endif %}>Travel</option>
+            <option value="Equipment" {% if tier_setting_3 and tier_setting_3.category == 'Equipment'%}selected{% endif %}>Equipment</option>
+            <option value="Internet" {% if tier_setting_3 and tier_setting_3.category == 'Internet'%}selected{% endif %}>Internet</option>
+            <option value="Hosting" {% if tier_setting_3 and tier_setting_3.category == 'Hosting'%}selected{% endif %}>Hosting</option>
+            <option value="Furniture" {% if tier_setting_3 and tier_setting_3.category == 'Furniture'%}selected{% endif %}>Furniture</option>
+            <option value="Office Supplies" {% if tier_setting_3 and tier_setting_3.category == 'Office Supplies'%}selected{% endif %}>Office Supplies</option>
+            <option value="Vehicles" {% if tier_setting_3 and tier_setting_3.category == 'Vehicles'%}selected{% endif %}>Vehicles</option>
+            <option value="Accommodation" {% if tier_setting_3 and tier_setting_3.category == 'Accommodation'%}selected{% endif %}>Accommodation</option>
+            <option value="Continuing Education" {% if tier_setting_3 and tier_setting_3.category == 'Continuing Education'%}selected{% endif %}>Continuing Education</option>
+            <option value="Conferences And Seminars" {% if tier_setting_3 and tier_setting_3.category == 'Conferences And Seminars'%}selected{% endif %}>Conferences And Seminars</option>
+            <option value="Professional Fees" {% if tier_setting_3 and tier_setting_3.category == 'Professional Fees'%}selected{% endif %}>Professional Fees</option>
+            <option value="Marketing and Advertising" {% if tier_setting_3 and tier_setting_3.category == 'Marketing and Advertising'%}selected{% endif %}>Marketing and Advertising</option>
+            <option value="Business Insurance" {% if tier_setting_3 and tier_setting_3.category == 'Business Insurance'%}selected{% endif %}>Business Insurance</option>
+            <option value="Software and Subscription Services" {% if tier_setting_3 and tier_setting_3.category == 'Software and Subscription Services'%}selected{% endif %}>Software and Subscription Services</option>
+            <option value="Computer Repair" {% if tier_setting_3 and tier_setting_3.category == 'Computer Repair'%}selected{% endif %}>Computer Repair</option>
+            <option value="Fuel" {% if tier_setting_3 and tier_setting_3.category == 'Fuel'%}selected{% endif %}>Fuel</option>
+            <option value="Uncategorized Expenses" {% if tier_setting_3 and tier_setting_3.category == 'Uncategorized Expenses'%}selected{% endif %}>Uncategorized Expenses</option>
+            <option value="Other" {% if tier_setting_3 and tier_setting_3.category == 'Other'%}selected{% endif %}>Other</option>
+          </select>
+      </div>
+      <div>
+        <h3 class="text-indigo-600 text-xl">Role</h3>
+        <input type="text" min="0" name="role_tier3" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md mt-4" {% if tier_setting_3 %}value="{{ tier_setting_3.role }}"{% endif %}>
+      </div>
+    </div>
+  </div>
+  <div class="flex">
+    <div class="px-6 py-4 flex flex-row items-center">
+      <button type="submit" class="flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit</button><span>&nbsp;(This is a required Step)</span>
+    </div>
+    <div class="px-6 py-4 flex flex-row items-center">
+      <div class="flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 status-overdue cursor-pointer" id="cancel-tier-edit">Cancel</div>
+    </div>
+  </div>
+</form>
+
+<script>
+  const cancelTierEdit = document.getElementById('cancel-tier-edit');
+  cancelTierEdit?.addEventListener('click', () => {
+        window.location.reload()
+    });
+</script>
+{% endmacro %}

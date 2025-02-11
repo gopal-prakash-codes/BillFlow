@@ -1,0 +1,28 @@
+{% macro horizontal_nav(user_type='customer', is_subscribed=0, request=None) %}
+<nav aria-label="horizontal navbar" class="flex items-center {% if user_type == 'approver' or user_type =='accountant' %} justify-end {% else %} justify-between {% endif %} border-b border-zinc-200 px-10 py-2">
+
+    <!-- Left -->
+    {% if user_type != 'approver' and user_type !='accountant' %}
+    <div class="flex flex-row">
+        <div class="text-sm text-slate-800 p-3 rounded hover:underline hover:gb-slate-50">
+          <a href="#">My Bank Balance</a>
+        </div>
+        <div id="upgrade" class="text-sm text-blue-800 p-3 rounded hover:underline hover:gb-slate-50 cursor-pointer">
+          (Set Up)
+        </div>
+    </div>
+    {% endif %}
+
+    {% include 'components/payments/upgrade-card.html' %}
+
+    <!-- Right -->
+    <div>
+        <div class="text-sm text-slate-800 p-3 rounded">
+          {% if is_subscribed == 0 and request.path != '/select-plan' and user_type == 'customer' %}
+          <a href="/select-plan" class="inline-flex items-center py-2 px-4 mr-3 border-red-800 border border-indigo-500 border-2 rounded-md shadow-sm text-sm font-medium text-indigo-600 focus:outline-none focus:ring-offset-2">Upgrade Now</a>
+          {% endif %}
+          <a {% if user_type == 'customer' %}class="hover:underline hover:gb-slate-50"{% endif %} {% if user_type == 'accountant' %}href="/landing"{% else %}href="/logout"{% endif %}>Sign Out</a>
+        </div>
+    </div>
+</nav>
+{% endmacro %}

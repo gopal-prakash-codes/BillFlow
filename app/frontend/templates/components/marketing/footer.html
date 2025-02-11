@@ -1,0 +1,142 @@
+{% from "components/auth/signup-form.html" import signup_form %}
+
+
+{% macro marketing_footer(request) %}
+<footer class="bg-gray-800" aria-labelledby="footer-heading">
+    <h2 id="footer-heading" class="sr-only">Footer</h2>
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+      <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+        <div class="grid grid-cols-2 gap-8 xl:col-span-2">
+          <div class="md:grid md:grid-cols-3 md:gap-8">
+            <div class="mt-4">
+              <span class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Company</span>
+              <ul role="list" class="mt-4 space-y-4">
+                <li style="list-style-type: none;">
+                  <a href="/about-us" class="text-base text-gray-300 hover:text-white"> About Us </a>
+                </li>
+
+                <li style="list-style-type: none;">
+                  <a href="/how-it-works" class="text-base text-gray-300 hover:text-white"> How it Works </a>
+                </li>
+
+                <li style="list-style-type: none;">
+                  <a href="/landing#pricing" class="text-base text-gray-300 hover:text-white"> Pricing </a>
+                </li>
+
+                <li style="list-style-type: none;">
+                  <a href="/landing#faq-section" class="text-base text-gray-300 hover:text-white"> FAQs </a>
+                </li>
+
+                <li style="list-style-type: none;">
+                  <a href="mailto:hello@easyinvoicemanager.com" class="text-base text-gray-300 hover:text-white"> Contact </a>
+                </li>
+
+                <li style="list-style-type: none;">
+                  <a href="/Terms-and-condititons" target="_blank" class="text-base text-gray-300 hover:text-white"> Terms </a>
+                </li>
+
+                <li style="list-style-type: none;">
+                  <a href="/data-privacy" target="_blank" class="text-base text-gray-300 hover:text-white"> Data Policy </a>
+                </li>
+
+                <li style="list-style-type: none;">
+                  <a href="https://myeasyinvoicemanager.freshdesk.com/support/tickets/new" target="_blank" class="text-base text-gray-300 hover:text-white"> Support </a>
+                </li>
+
+                <li style="list-style-type: none;">
+                  <a href="https://myeasyinvoicemanager.freshdesk.com/support/home" target="_blank" class="text-base text-gray-300 hover:text-white"> Knowledgebase </a>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4">
+              <span class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Compare</span>
+              <ul role="list" class="mt-4 space-y-4">
+                <li style="list-style-type: none;">
+                  <a href="/alternative-to-bill" target="_blank" class="text-base text-gray-300 hover:text-white"> Alternative To Bill.com </a>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4">
+              <span class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Resources</span>
+              <ul role="list" class="mt-4 space-y-4">
+                <li style="list-style-type: none;">
+                  <a href="/manual-vs-automated-accounts-payable-whats-the-difference" target="_blank" class="text-base text-gray-300 hover:text-white">Manual or automated accounts payable? What's the difference? Let us help you decide!</a>
+                </li>
+                <li style="list-style-type: none;">
+                  <a href="/general-ap-accounting" target="_blank" class="text-base text-gray-300 hover:text-white">General AP Accounting Debits and Credits</a>
+                </li>
+                <li style="list-style-type: none;">
+                  <a href="/accounts-payable-debit-or-credit-journal-entries" target="_blank" class="text-base text-gray-300 hover:text-white">Paid AP Invoice Journal Entry</a>
+                </li>
+              </ul>
+              <ul role="list" class="mt-4 space-y-4">
+                <li style="list-style-type: none;">
+                  <a href="/account-payable-glossary" target="_blank" class="text-base text-gray-300 hover:text-white">Accounts Payable Glossary</a>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4">
+              <span class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Media</span>
+              <ul role="list" class="mt-4 space-y-4">
+                <li style="list-style-type: none;">
+                  <a href="/press-release"  target="_blank" class="text-base text-gray-300 hover:text-white"> PRESS RELEASE November 28, 2023</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="mt-8 xl:mt-0">
+          {{ signup_form(request) }}
+        </div>
+      </div>
+      <div class="mt-8 border-t border-gray-700 pt-8 md:flex">
+        <div class="w-full md:w-1/2 md:order-2 text-right">
+          <div class="flex space-x-6 md:float-right" style="justify-content: center;">
+            <div>
+              <svg
+              fill="#FFFFFF"
+              class="w-6 h-6 text-blue-600 fill-current"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24">
+              <path
+                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+              />
+            </svg>
+            </div>
+            <div>
+              <a href="https://twitter.com/easyinvoicemgr">
+              <svg
+                fill="#FFFFFF"
+                class="w-6 h-6 text-blue-300 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24">
+                <path
+                  d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"
+                />
+              </svg>
+            </a>
+            </div>
+            <div>
+              <a href="https://www.linkedin.com/company/easy-invoice-management/">
+              <svg fill="#FFFFFF"
+              class="w-6 h-6 text-blue-600 fill-current" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="30px" height="30px">    <path d="M9,25H4V10h5V25z M6.501,8C5.118,8,4,6.879,4,5.499S5.12,3,6.501,3C7.879,3,9,4.121,9,5.499C9,6.879,7.879,8,6.501,8z M27,25h-4.807v-7.3c0-1.741-0.033-3.98-2.499-3.98c-2.503,0-2.888,1.896-2.888,3.854V25H12V9.989h4.614v2.051h0.065 c0.642-1.18,2.211-2.424,4.551-2.424c4.87,0,5.77,3.109,5.77,7.151C27,16.767,27,25,27,25z"/>
+       
+            </svg>
+            </div>
+
+
+            <div  style="position:relative;right:20px;">
+              <a href="#">
+              <svg fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="30px" height="30px" class=" w-6 h-6 text-blue-300 fill-current">
+                <path d="M 9 4 C 10.814 4 5.3808594 5.0488281 5.3808594 5.0488281 L 5.3671875 5.0644531 C 3.4606632 5.3693645 2 7.0076245 2 9 L 2 15 L 2 15.001953 L 2 21 L 2 21.001953 A 4 4 0 0 0 5.3769531 24.945312 L 5.3808594 24.951172 C 5.3808594 24.951172 10.814 26.001953 15 26.001953 C 19.186 26.001953 24.619141 24.951172 24.619141 24.951172 L 24.621094 24.949219 A 4 4 0 0 0 28 21.001953 L 28 21 L 28 15.001953 L 28 15 L 28 9 A 4 4 0 0 0 24.623047 5.0546875 L 24.619141 5.0488281 C 24.619141 5.0488281 19.186 4 15 4 z M 12 10.398438 L 20 15 L 12 19.601562 L 12 10.398438 z"/>
+               
+              </svg>
+            </div>
+          </div>
+        </div>
+        <span class="mt-8 text-base text-gray-400 md:mt-0 md:order-1 md:w-1/2">&copy; 2022 Easy Invoice Management All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+{% endmacro %}

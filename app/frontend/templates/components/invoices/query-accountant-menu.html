@@ -1,0 +1,35 @@
+{% macro query_accountant_menu(vendors) %}
+
+<form method="GET" action="/accountant/view-invoice" class="flex flex-col">
+    <!-- Filter Menu -->
+    <div class="inline-block text-left mb-4 w-90 flex justify-between">
+        <label for="vendors">Vendor</label>
+        <select
+            class="form-control text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" style="width: 60%;" name="vendor">
+            <option value="">select vendor</option>
+            {% for vendor in vendors %}
+            <option value="{{vendor.id}}">{{vendor.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="inline-block text-left mb-4 w-90 flex justify-between">
+        <label for="due_date">Due Date</label>
+        <input type="date" class="form-control text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" style="width: 60%;" name="due_date"></input>
+    </div>
+
+    <div class="inline-block text-left mb-4 w-90 flex justify-between">
+        <label for="invoice_number">Invoice number</label>
+        <input type="text" class="form-control text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" style="width: 60%;" name="invoice_number"></input>
+    </div>
+
+    <div class="flex flexx-row items-center">
+        <button type="submit"
+            class="flex justify-center py-2 px-4 border border-indigo-500 rounded-md shadow-sm text-sm font-medium text-white text-indigo-700 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-full" style="width: fit-content;"
+            type="button" data-modal-toggle="defaultModal">View Invoices
+        </button>
+        <span>&nbsp;&nbsp;(To see invoice click on view)</span>
+    </div>
+</form>
+
+{% endmacro %}

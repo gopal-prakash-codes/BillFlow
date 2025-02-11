@@ -1,0 +1,97 @@
+{% macro invoice_table(invoice_list, request=None, user_type=None, is_hidden=False) %}
+<div x-data="{
+
+}">
+    <div class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                    <table id="invoice-table" class="min-w-full divide-y divide-gray-300 {% if user_type == 'accountant' and is_hidden %}hidden{% endif %}">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col"
+                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                    Vendor</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                    Invoice No.</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Amount
+                                    Due</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status
+                                </th>
+                                {% if request.path == '/invoice-approvals-list' %}
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Assigned Approver</th>
+                                {% endif %}
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Due
+                                    Date</th>
+                                {% if request.path == '/paid-details' %}
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                    Category</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                    Details</th>
+                                {% endif %}
+                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                    <span class="sr-only">View Invoice</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            {% for invoice in invoice_list %}
+                            <tr {% if request.path != '/paid-details' and user_type != 'accountant' %} @click="document.location.href = '/invoices/{{invoice.id}}'" {% endif %}
+                                class="hover:bg-gray-100 hover:cursor-pointer">
+                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                    {{invoice.vendor_name}}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{invoice.invoice_id}}
+                                </td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    {% if invoice.currency %}
+                                        {% if invoice.currency == "USD" %}
+                                            ${{invoice.amount_due}}</td>
+                                        {% else %}
+                                            {{invoice.currency}}{{invoice.amount_due}}</td>
+                                        {% endif %}
+                                    {% else %}
+                                        -</td>
+                                    {% endif %}
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    {% if request.path == "/invoice-approvals-list" %}
+                                    <div class="{% if invoice.status == 'approved' %}bg-green-100{% else %}status-waiting-for-approval{% endif %} py-2 px-2 text-white rounded-lg"
+                                        style="width: fit-content;">{{invoice.status[0]|upper}}{{invoice.status[1:]}}</div>
+                                    {% else %}
+                                    <div class="{% if invoice.status == 'overdue' %}status-overdue{% elif invoice.status == 'due' %}status-due {% else %} status-current {% endif %} py-2 px-2 text-white rounded-lg"
+                                        style="width: fit-content;">{{invoice.status[0]|upper}}{{invoice.status[1:]}}</div>
+                                    {% endif %}
+                                </td>
+                                {% if request.path == '/invoice-approvals-list' %}
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    {% if invoice.approver_name %}{{ invoice.approver_name }}{% else %}-{% endif %}
+                                </td>
+                                {% endif %}
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    {{invoice.american_due_date}}</td>
+                                {% if request.path == '/paid-details' %}
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{% if invoice.category
+                                    %}{{invoice.category}}{% else %}---{% endif %}</td>
+                                <td @click="openPopup('{{invoice.category}}',
+                                '{{invoice.id}}')" class="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6 cursor-pointer flex justify-center">
+                                    <div
+                                        class="text-indigo-600 bg-indigo-100 py-2 px-4 text-white hover:text-indigo-900 rounded-full flex justify-center">View<span class="sr-only">View
+                                            Invoice</span></div>
+                                </td>
+                                {% else %}
+                                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
+                                    <a id="viewInvoiceLink" {% if user_type == 'accountant' %}href='/accountant/invoice/{{invoice.id}}'{% else %}href="#"{% endif %}
+                                        class="text-indigo-600 bg-indigo-100 py-2 px-4 text-white hover:text-indigo-900 rounded-full">View<span class="sr-only ">View
+                                            Invoice</span></a>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+
+                            <!-- More people... -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endmacro %}
