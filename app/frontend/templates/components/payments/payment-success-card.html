@@ -1,0 +1,136 @@
+<!-- Need to add this payment success UI in the payment popup modal, This component will be included in "/components/payments/payment-popup.html" -->
+
+<!-- Main modal -->
+<!-- hidden class should be removed when the api response is success for payment -->
+<div
+  id="payment-popup-success"
+  tabindex="-1"
+  aria-hidden="true"
+  class="overflow-y-auto overflow-x-hidden hidden fixed top-0 w-100 right-0 left-50 z-50 w-full md:inset-0 h-modal md:h-full pt-8 show-payment-success-popup"
+  style="height: 100vh"
+>
+  <div
+    class="relative p-4 w-full max-w-2xl h-full md:h-auto"
+    style="margin: auto"
+  >
+    <!-- Modal content -->
+    <div
+      class="relative bg-white rounded-lg dark:bg-gray-700"
+      style="box-shadow: 0px 4px 8px 0px rgb(218, 217, 217)"
+    >
+      <!-- Modal header -->
+      <div
+        class="flex flex-col items-start p-4 rounded-t border-b dark:border-gray-600"
+      >
+        <div class="flex flex-row w-full">
+          <div class="flex flex-row mb-6 w-full" style="align-items: center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 text-green-500"
+              style="font-size: 2rem"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <h1
+              class="text-xl font-semibold text-green-500 font-bold"
+              style="font-size: 2rem"
+            >
+              &nbsp; Payment Confirmed
+            </h1>
+          </div>
+          <div class="float-right text-gray-500 cursor-pointer" id="close-btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </div>
+        </div>
+        <span class="text-gray-500">
+          Thank you, your payment has been successful and your subscription is
+          now confirmed. A confirmation email has been sent to
+          <span class="font-semibold" id="success-email"></span>.
+        </span>
+      </div>
+      <!-- Modal Body -->
+      <div class="flex flex-col p-6">
+        <h2 class="font-bold">Order Summary</h2>
+        <div class="w-full border border-gray-200 rounded-lg shadow-sm p-6">
+          <div class="flex flex-row flex-wrap success-ui-width">
+            <div class="w-full flex flex-row justify-between">
+              <div
+                class="font-bold text-gray-500 card-element-width text-align-end"
+              >
+                Product:
+              </div>
+              <div class="font-semibold card-element-width">
+                <span id="success-product"></span>
+              </div>
+            </div>
+            <div class="w-full flex flex-row justify-between">
+              <div
+                class="font-bold text-gray-500 card-element-width text-align-end"
+              >
+                Quantity:
+              </div>
+              <div class="font-semibold card-element-width">
+                <span id="success-quantity"></span>
+              </div>
+            </div>
+            <div class="w-full flex flex-row justify-between">
+              <div
+                class="font-bold text-gray-500 card-element-width text-align-end"
+              >
+                Company Name:
+              </div>
+              <div class="font-semibold card-element-width">
+                <span id="success-company_name"></span>
+              </div>
+            </div>
+            <div class="w-full flex flex-row justify-between">
+              <div
+                class="font-bold text-gray-500 card-element-width text-align-end"
+              >
+                Monthly Price:
+              </div>
+              <div class="font-semibold card-element-width">
+                <span id="success-total_price"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelector("#close-btn").addEventListener("click", () => {
+    document.getElementById("payment-popup-success").classList.add("hidden");
+    const product_type = document
+      .getElementById("payment-form")
+      .getAttribute("data-product-type");
+
+    if (product_type == "approver_subscription") {
+      window.location.href =
+        window.location.origin + "/settings/account/?payment=success";
+    } else {
+      window.location.href = window.location.origin + "/settings/account";
+    }
+  });
+</script>

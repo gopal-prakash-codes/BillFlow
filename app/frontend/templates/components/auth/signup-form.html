@@ -1,0 +1,155 @@
+{% macro signup_form(request) %}
+<div class="bg-white max-w-md w-full mx-auto border border-gray-200 rounded-lg overflow-hidden">
+    <div class="px-4 py-8 sm:px-10">
+        <div>
+            <form id="signup_form_id" action="/register" method="POST" class="space-y-6"
+                onsubmit="return processForm(event)">
+                <h3 class="text-medium font-medium text-gray-700">Sign Up Now!</h3>
+
+                {% if request.query_params.get('error') %}
+                <div class="rounded-md bg-red-50 p-4 border border-red-800">
+                    <h3 class="text-sm font-medium text-red-800">{{request.query_params.get('error')}}</h3>
+                </div>
+                {% endif %}
+
+                <div>
+                    <label for="name" class="sr-only">Full name</label>
+                    <input type="text" name="name" id="name" autocomplete="name" placeholder="Full name" required
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                </div>
+
+                <div>
+                    <label for="company_name" class="sr-only">Company name</label>
+                    <input type="text" name="company_name" id="company_name" placeholder="Company Name" required
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                </div>
+
+                <div>
+                    <label for="email" class="sr-only">Email Address</label>
+                    <input type="text" name="email" id="email" autocomplete="email" placeholder="accounting@company.com"
+                        required
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                </div>
+
+                <div>
+                    <label for="password" class="sr-only">Password</label>
+                    <input id="password" name="password" type="password" placeholder="Password"
+                        autocomplete="current-password" required
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        type="button" data-modal-toggle="defaultModal">Free Plan - Start now!</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Main modal -->
+    <div id="defaultModal" tabindex="-1" aria-hidden="true"
+        class="default-Modal modal hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full h-modal md:h-full h-screen z-10">
+        <div
+            class="modal-dialog mx-auto modal-dialog-centered relative w-auto p-4 w-full max-w-2xl md:h-auto m-area">
+            <!-- Modal content -->
+            <div
+                class="modal fade fixed top-0 left-0 w-full outline-none overflow-x-hidden overflow-y-auto relative bg-white rounded-lg shadow dark:bg-gray-700 modal-content">
+                <!-- Modal header -->
+                <div class="flex justify-between items-start p-4 rounded-t border-b dark:border-gray-600">
+                    <!-- <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                        Terms of Service
+                                    </h3> -->
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-toggle="defaultModal"
+                        onclick="document.getElementById('defaultModal').style.display='none'">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6" id="captcha">
+
+                    <div>
+                        <label for="captcha" class="">Enter captcha</label>
+                        <input type="text" name="text_captcha" id="text_captcha"
+                            placeholder="Enter captcha shown in picture" required
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                            <span class="block text-red-700 text-sm mt-2" id="invalid_captcha"></span>
+                    </div>
+                    <div class="flex align-center">
+                        <div id="captcha_image_div">
+                    </div>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="refresh-icon" viewBox="0 0 512 512" onclick="get_captcha()">
+                                <path d="M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15H24.103c-7.498 0-13.194-6.807-11.807-14.176C33.933 94.924 134.813 8 256 8c66.448 0 126.791 26.136 171.315 68.685L463.03 40.97C478.149 25.851 504 36.559 504 57.941V192c0 13.255-10.745 24-24 24H345.941c-21.382 0-32.09-25.851-16.971-40.971l41.75-41.749zM32 296h134.059c21.382 0 32.09 25.851 16.971 40.971l-41.75 41.75c31.262 29.273 71.835 45.319 114.876 45.28 77.418-.07 144.315-53.144 162.787-126.849 1.344-5.363 6.122-9.15 11.651-9.15h57.304c7.498 0 13.194 6.807 11.807 14.176C478.067 417.076 377.187 504 256 504c-66.448 0-126.791-26.136-171.315-68.685L48.97 471.03C33.851 486.149 8 475.441 8 454.059V320c0-13.255 10.745-24 24-24z" />
+                            </svg>
+                            
+                        </div>
+                    </div>
+                    <p style="text-align:left">Product is designed for American and Canadian markets only</p>
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
+                    <button type="button" data-modal-toggle="defaultModal" onclick="enterCaptcha()"
+                        class=" flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="px-4 py-6 bg-gray-50 border-t border-gray-200 sm:px-10">
+        <p class="text-xs leading-5 text-gray-500">By signing up, you agree to our <a href="/Terms-and-condititons"
+                target="_blank" class="font-medium text-gray-900 hover:underline">Terms</a>, <a href="/data-privacy"
+                target="_blank" class="font-medium text-gray-900 hover:underline">Data Policy</a>.</p>
+    </div>
+</div>
+
+<script>
+    function get_captcha() {
+        try {
+            url = '/get-captcha'
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    var captcha_image = document.getElementById("captcha-image")
+                    if (!captcha_image) {
+                        var captcha_image = document.createElement('img');
+                        captcha_image.id = 'captcha-image'
+                    }
+                    captcha_image.src = `data:image/png;base64, ${data['captcha_image']}`;
+                    captcha_image.alt = 'captcha-image'
+                    document.getElementById('captcha_image_div').appendChild(captcha_image);
+                })
+        } catch (error) {
+            console.log(error)
+
+        }
+    }
+
+    function processForm(e) {
+        e.preventDefault();
+        get_captcha()
+        var element = document.getElementById('defaultModal')
+        element.style.display = "block"
+        element.classList.add("show")
+        return false;
+    }
+
+    function enterCaptcha() {
+        var captcha_txt = document.getElementById('text_captcha').value
+        var input_captcha = document.createElement("INPUT");
+        input_captcha.type = "text"
+        input_captcha.value = captcha_txt
+        input_captcha.id = 'captcha'
+        input_captcha.name = 'captcha'
+        input_captcha.required = true
+        document.getElementById('signup_form_id').appendChild(input_captcha);
+        document.getElementById('signup_form_id').submit();
+    }
+</script>
+{% endmacro %}

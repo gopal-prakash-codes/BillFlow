@@ -1,0 +1,37 @@
+<!-- Main modal -->
+<div id="upgrade-popup" tabindex="-1" aria-hidden="true"
+class="overflow-y-auto overflow-x-hidden hidden fixed top-0 w-100 right-0 left-50 z-50 w-full md:inset-0 h-modal md:h-full pt-8" style="height: 100vh;">
+<div class="relative p-4 w-full max-w-2xl h-full md:h-auto" style="margin: auto;">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg dark:bg-gray-700" style="box-shadow: 0px 4px 8px 0px rgb(218, 217, 217);">
+        <!-- Modal header -->
+        <div class="flex flex-row justify-between p-4 rounded-t border-b dark:border-gray-600">
+            <div class="flex flex-row mb-6" style="align-items: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 prose" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 15.707a1 1 0 010-1.414l5-5a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414 0zm0-6a1 1 0 010-1.414l5-5a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 5.414 5.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+                <h1 class="text-xl font-semibold font-bold prose">
+                    &nbsp; Upgrade To Premium
+                </h1>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" id="cancel-btn" class="h-8 w-8 prose hover:text-green-800 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <!-- Modal Body -->
+        <div class="flex flex-col p-6">
+            <p>Please upgrade to <span class="font-semibold">Premium</span> <a href="/select-plan" class="text-blue-800 underline">Plan</a>.</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    document.getElementById('upgrade')?.addEventListener('click', () => {
+        document.getElementById('upgrade-popup').classList.remove('hidden');
+    });
+
+    document.getElementById('cancel-btn').addEventListener('click', () => {
+        document.getElementById('upgrade-popup').classList.add('hidden');
+    });
+</script>

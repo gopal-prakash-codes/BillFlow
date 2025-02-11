@@ -1,0 +1,19 @@
+{% from "components/global/standard-sidebar.html" import sidebar %}
+{% from "components/global/horizontal-nav.html" import horizontal_nav %}
+
+<html lang="en">
+  <head>
+    {% block head %} {% include 'global-head.html' %} {% endblock %}
+  </head>
+  <body class="flex">
+    {% set user_type = user_type|default('customer') %}
+    {% if user_type == 'customer' %}
+      {{ sidebar(is_subscribed)}}
+    {% endif %}
+    <div class="w-full">
+      {{ horizontal_nav(user_type, is_subscribed, request) }}
+      {% block content %}
+      {% endblock %}
+    </div>
+  </body>
+</html>

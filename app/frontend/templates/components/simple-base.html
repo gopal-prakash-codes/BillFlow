@@ -1,0 +1,24 @@
+<html lang="en">
+  <head>
+    {% block head %} {% include 'global-head.html' %} {% endblock %}
+  </head>
+  <body>
+    {% block content %} {% endblock %}
+  </body>
+  
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "easyinvoicemanager",
+    "description": "Accounts payable automation including invoice approval workflow for small and medium size businesses",
+    "url": "https://www.easyinvoicemanager.com",
+    "logo": "https://www.easyinvoicemanager.com//static/images/logo-color-50x50.png",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer support",
+      "email": "support@myeasyinvoicemanager.freshdesk.com/"
+    }
+  }
+  </script>
+</html>

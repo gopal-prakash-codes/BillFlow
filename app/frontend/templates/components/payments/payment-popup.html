@@ -1,0 +1,448 @@
+<!-- Main modal -->
+{% include "/components/payments/payment-success-card.html" %}
+<div
+  id="payment-popup"
+  tabindex="-1"
+  aria-hidden="true"
+  class="overflow-y-auto overflow-x-hidden hidden fixed top-0 w-100 right-0 left-50 z-50 w-full md:inset-0 h-modal md:h-full pt-8"
+  style="height: 100vh"
+>
+  <div
+    class="relative p-4 w-full max-w-2xl h-full md:h-auto"
+    style="margin: auto"
+  >
+    <!-- Modal content -->
+    <div
+      class="relative bg-white rounded-lg dark:bg-gray-700"
+      style="box-shadow: 0px 4px 8px 0px rgb(218, 217, 217)"
+    >
+      <!-- Modal header -->
+      <div
+        class="flex flex-col items-center items-start p-4 rounded-t border-b dark:border-gray-600"
+      >
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
+          {% if product_type == "approver_subscription" %} Start Your Approver
+          Subscription {% else %} Start Your Subscription {% endif %}
+        </h1>
+      </div>
+      <!-- End Modal Header -->
+
+      <!-- Modal Body -->
+      <div class="flex flex-col">
+        <div class="w-full" data-name="check">
+          <form
+            class="flex flex-row justify-between px-6 py-6 gap-8"
+            name="select-plan-form"
+            data-product-type="{{product_type}}"
+            id="select-plan-form"
+          >
+            {% for plan in plans %}
+              {% if plan.plan_key != 'Free'  %} 
+                <div
+                  class="px-3 py-3 rounded-lg shadow-lg border-2"
+                  id="check{{loop.index}}"
+                  style="{% if plan.plan_key == 'Premium' %}width: 45%;{% endif %}"
+                >
+                  {% if product_type == "approver_subscription" %}
+                  <div>{{plan.max_approvers_raw}}/approver/month</div>
+                  {% endif %} 
+                  <input type="radio" class="rounded-full
+                  checked:bg-violet-700 selected-sub cursor-pointer"
+                  value="{{plan.stripe_plan_id}}" name="subscriptionprice" />
+                  <label for="plan">
+                    <b
+                      >&nbsp;
+                      <span
+                        ><span style="font-size: 2rem">{{plan.raw_amount}}</span
+                        >/month</span
+                      ></b
+                    ></label
+                  ><br />
+                  {% if plan.features %} 
+                      {% for feature in plan.features[:-1] %}
+                       <span>{{feature}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br></span>
+                      {% endfor %}
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </form>
+        </div>
+        <div
+          id="card-error-div"
+          class="text-red-700 w-full hidden font-extrabold"
+        >
+          <div class="flex flex-row justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            <span id="card-error"></span>
+          </div>
+        </div>
+        <div class="container w-full px-6 py-6">
+          <form id="payment-form" class="border">
+            <div>
+              <img src="/static/images/ccbanner.jpg" alt="banner" />
+            </div>
+            <div class="rounded p-3 flex flex-col">
+              <div class="mt-5 mb-8">
+                <span>Card Number</span>
+                <div
+                  id="card-number-element"
+                  class="number-element"
+                  required
+                ></div>
+                <span class="text-red-700" id="card-number-error"></span>
+              </div>
+
+              <div class="flex justify-around w-full gap-4">
+                <div style="width: 50%">
+                  <label for="card-expiry-element" class="mt-1"
+                    >Expiry Date</label
+                  >
+                  <div
+                    id="card-expiry-element"
+                    class="expiry-element"
+                    resquired
+                  ></div>
+                  <span class="text-red-700" id="card-expiry-error"></span>
+                </div>
+                <div style="width: 50%">
+                  <label for="card-cvc-element" class="mt-1">CVC Number</label>
+                  <div id="card-cvc-element" class="cvc-element" required></div>
+                  <span class="text-red-700" id="card-cvc-error"></span>
+                </div>
+              </div>
+              <button
+                x-transition
+                type="submit"
+                class="btn payment-btn my-5 rounded-full py-4 justify-center inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150"
+                id="payBtn"
+              >
+                <svg
+                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden"
+                  id="pay-btn-spinner"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Pay
+              </button>
+              <button
+                class="btn payment-btn my-2 rounded-full py-4"
+                type="button"
+                id="cancelBtn"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- End Modal Body -->
+    </div>
+  </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  const stripe = Stripe(
+    "{{publishable_key}}"
+  );
+  document.addEventListener("DOMContentLoaded", async () => {
+    let style = {
+      base: {
+        iconColor: "#666EE8",
+        color: "#31325F",
+        lineHeight: "50px",
+        fontWeight: 300,
+        fontFamily: "Helvetica Neue",
+        fontSize: "20px",
+
+        "::placeholder": {
+          color: "#CFD7E0",
+        },
+      },
+    };
+
+    var displayCardNumberError = document.getElementById("card-number-error");
+    displayCardNumberError.style.display = "none";
+
+    var displayCardExpiryError = document.getElementById("card-expiry-error");
+    displayCardExpiryError.style.display = "none";
+
+    var displayCardCvcError = document.getElementById("card-cvc-error");
+    displayCardCvcError.style.display = "none";
+
+    const elements = stripe.elements(style);
+    const cardNumberElement = elements.create("cardNumber", {
+      style: style,
+      showIcon: true,
+    });
+
+    cardNumberElement.mount("#card-number-element");
+
+    cardNumberElement.on("change", function (event) {
+      if (event.error) {
+        displayCardNumberError.style.display = "block";
+        displayCardNumberError.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${event.error.message}`;
+      } else {
+        displayCardNumberError.textContent = "";
+        displayCardNumberError.style.display = "none";
+      }
+    });
+
+    const cardExpiryElement = elements.create("cardExpiry", {
+      style: style,
+    });
+
+    cardExpiryElement.mount("#card-expiry-element");
+
+    cardExpiryElement.on("change", function (event) {
+      if (event.error) {
+        displayCardExpiryError.style.display = "block";
+        displayCardExpiryError.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${event.error.message}`;
+      } else {
+        displayCardExpiryError.textContent = "";
+        displayCardExpiryError.style.display = "none";
+      }
+    });
+
+    const cardCvcElement = elements.create("cardCvc", {
+      style: style,
+    });
+    cardCvcElement.mount("#card-cvc-element");
+
+    cardCvcElement.on("change", function (event) {
+      if (event.error) {
+        displayCardCvcError.style.display = "block";
+        displayCardCvcError.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${event.error.message}`;
+      } else {
+        displayCardCvcError.textContent = "";
+        displayCardCvcError.style.display = "none";
+      }
+    });
+
+    const el = elements.getElement("cardNumber");
+
+    document
+      .getElementById("payment-form")
+      .addEventListener("submit", completePayment);
+
+    async function completePayment(e) {
+      e.preventDefault();
+      document.getElementById("pay-btn-spinner").classList.remove("hidden");
+      let prices = document.querySelectorAll(".selected-sub");
+      let checked_price = null;
+      prices.forEach((price) => {
+        if (price.checked) {
+          checked_price = price.value;
+        }
+      });
+
+      let paymentMethod = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardNumberElement,
+      });
+
+      if (paymentMethod.error) {
+        document.getElementById("pay-btn-spinner").classList.add("hidden");
+        return;
+      }
+
+      let {
+        client_secret,
+        error_code,
+        error_status,
+        payment_status,
+        intent_id,
+        price_id,
+      } = await fetch("/create-payment-intent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          price_id: checked_price,
+          payment_method: paymentMethod.paymentMethod.id,
+        }),
+      }).then((data) => {
+        return data.json();
+      });
+
+      if (error_status) {
+        document.getElementById("card-error-div").classList.remove("hidden");
+        document.getElementById("pay-btn-spinner").classList.add("hidden");
+        if (error_code == "card_declined") {
+          document.getElementById("card-error").textContent =
+            "Your card is declined!";
+        } else if (error_code == "invalid_request") {
+          document.getElementById("card-error").textContent =
+            "An Invalid request occured!";
+        } else if (error_code == "unauthorized") {
+          document.getElementById("card-error").textContent =
+            "Unauthorized Action";
+        } else {
+          document.getElementById("card-error").textContent =
+            "Something went wrong! Can't complete your payment.";
+        }
+      }
+
+      if (client_secret) {
+        if (payment_status == "succeeded") {
+          fetch("/upgrade-plan", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              price_id: price_id,
+            }),
+          })
+            .then((data) => {
+              document
+                .getElementById("pay-btn-spinner")
+                .classList.add("hidden");
+              return data.json();
+            })
+            .then((data) => {
+              document
+                .getElementById("pay-btn-spinner")
+                .classList.add("hidden");
+              document.getElementById("payment-popup").classList.add("hidden");
+              document
+                .getElementById("payment-popup-success")
+                .classList.remove("hidden");
+              document.getElementById("success-email").textContent =
+                data["email"];
+              document.getElementById(
+                "success-product"
+              ).textContent = `Subscription of ${data["product"]} Plan`;
+              document.getElementById("success-quantity").textContent =
+                data["quantity"];
+              document.getElementById("success-company_name").textContent =
+                data["company_name"];
+              document.getElementById(
+                "success-total_price"
+              ).textContent = `$ ${data["total_price"]}`;
+            });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  var subscriptionCard = document.getElementsByName("subscriptionprice");
+  const check1 = document.getElementById("check1");
+  const check2 = document.getElementById("check2");
+  const check3 = document.getElementById("check3");
+
+  const changeSelectedDiv = () => {
+    if (subscriptionCard[0]?.checked) {
+      {% if product_type == "approver_subscription" %}
+        check1.classList.add("border-2");
+        check1.style.borderColor = "#4338CA";
+        check1.style.boxShadow = "0px 4px 8px 0px #a19be3";
+        check2.style.boxShadow = "";
+        check2.classList.remove("border-2");
+        check3.style.boxShadow = "";
+        check3.classList.remove("border-2");
+      {% else %}
+        check2.classList.add("border-2");
+        check2.style.borderColor = "#4338CA";
+        check2.style.boxShadow = "0px 4px 8px 0px #a19be3";
+        check3.style.boxShadow = "";
+        check3.classList.remove("border-2");
+      {% endif %}
+
+    } else if (subscriptionCard[1]?.checked) {
+      {% if product_type == "approver_subscription" %}
+        check2.classList.add("border-2");
+        check2.style.borderColor = "#4338CA";
+        check2.style.boxShadow = "0px 4px 8px 0px #a19be3";
+        check1.style.boxShadow = "";
+        check1.classList.remove("border-2");
+        check3.style.boxShadow = "";
+        check3.classList.remove("border-2");
+      {% else %}
+        check3.classList.add("border-2");
+        check3.style.borderColor = "#4338CA";
+        check3.style.boxShadow = "0px 4px 8px 0px #a19be3";
+        check2.style.boxShadow = "";
+        check2.classList.remove("border-2");
+      {% endif %}  
+    }
+    else if (subscriptionCard[2]?.checked) {
+      check3.classList.add("border-2");
+      check3.style.borderColor = "#4338CA";
+      check3.style.boxShadow = "0px 4px 8px 0px #a19be3";
+      check2.style.boxShadow = "";
+      check2.classList.remove("border-2");
+      check1.style.boxShadow = "";
+      check1.classList.remove("border-2");
+    }
+  };
+
+  changeSelectedDiv();
+  var payButton = document.getElementById("payBtn");
+
+  subscriptionCard[0].addEventListener("change", () => {
+    if (subscriptionCard[0].checked) {
+      payButton.disabled = false;
+      changeSelectedDiv();
+    }
+  });
+
+  subscriptionCard[1].addEventListener("change", () => {
+    if (subscriptionCard[1].checked) {
+      payButton.disabled = true;
+      changeSelectedDiv();
+    }
+  });
+  {% if product_type == "approver_subscription" %}
+    subscriptionCard[2].addEventListener("change", () => {
+      if (subscriptionCard[2].checked) {
+        changeSelectedDiv();
+      }
+    });
+  {% endif %}
+
+  let paymentPopUp = document.querySelectorAll(".show-payment-popup");
+  paymentPopUp.forEach((element) => {
+    element.addEventListener("click", () => {
+      document.getElementById("payment-popup").classList.remove("hidden");
+    });
+  });
+
+  document.getElementById("cancelBtn").addEventListener("click", (event) => {
+    document.getElementById("payment-popup").classList.add("hidden");
+    window.location.reload();
+  });
+</script>
