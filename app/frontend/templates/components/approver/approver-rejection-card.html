@@ -1,0 +1,50 @@
+{% macro approver_rejection_view(invoice_data) %}
+<div
+  id="approver-rejection-card"
+  tabindex="-1"
+  aria-hidden="true"
+  class="overflow-y-auto overflow-x-hidden hidden fixed top-0 w-100 right-0 left-50 z-50 w-full md:inset-0 h-modal md:h-full pt-8"
+  style="height: 100vh"
+>
+    <div
+        class="relative p-4 w-full max-w-2xl h-full md:h-auto"
+        style="margin: auto"
+    >
+        <!-- Modal content -->
+        <div
+        class="relative bg-white rounded-lg dark:bg-gray-700"
+        style="box-shadow: 0px 4px 8px 0px rgb(218, 217, 217)"
+        >
+        <div
+        class="flex flex-col items-center items-start p-4 rounded-t border-b dark:border-gray-600"
+      >
+        <h3 class="font-semibold text-gray-900 dark:text-white">
+          Enter a reason for rejecting this submitted transaction.
+        </h3>
+      </div>
+      <div class="flex flex-col">
+        <div class="w-full">
+            <form
+                id="reject-reason-form"
+                class="flex flex-col px-6 py-6 gap-8"
+                name="comment"
+                action="/approval/reject/{{invoice_data.id}}"
+                method="POST"
+            >
+            <textarea rows="4" cols="50" name="comment" class="border border-gray-300 text-gray-500" form="reject-reason-form" required placeholder="Enter text here..."></textarea>
+            <div class="flex flex-row">
+                <button type="submit"
+                    class="flex justify-center py-2 px-4 border border-red-800 shadow-sm text-sm font-medium text-white text-red-800 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-md mr-2" style="width: fit-content;"
+                    data-modal-toggle="defaultModal">Reject
+                </button>
+                <button type="button"
+                        class="flex justify-center py-2 px-4 border border-indigo-500 shadow-sm text-sm font-medium text-white text-indigo-700 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-md" style="width: fit-content;"
+                        data-modal-toggle="defaultModal" onclick="hideRejectModal()">Cancel
+                </button>
+            </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+{% endmacro %}

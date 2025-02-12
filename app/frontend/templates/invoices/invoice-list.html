@@ -1,0 +1,130 @@
+{% extends "components/sidebar-base.html" %}
+{% from "components/invoices/query-menu.html" import query_menu %}
+{% from "components/invoices/query-accountant-menu.html" import query_accountant_menu %}
+{% from "components/invoices/invoice-table.html" import invoice_table %}
+{% from "components/invoices/invoice-empty-state.html" import empty_state %}
+
+{% block head %}
+<title>Invoice List | Easy Invoice Management</title>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<main class="flex w-full">
+    <div class="w-full min-h-screen p-8 {% if user_type == 'accountant' %} max-w-7xl mx-auto my-5 {% endif %}">
+        <div class="w-full flex justify-end">
+        <a onclick=downloadInvoices() class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">Download CSV</a>
+        </div>
+        <h2 class="font-extrabold text-3xl mb-5">{% if user_type == 'accountant' %}Search For Invoices{% else %}Invoice List{% endif %}</h2>
+        {% if user_type == 'accountant' %}
+        {{ query_accountant_menu(vendors) }}
+        {% else %}
+        {{ query_menu() }}
+        {% endif %}
+
+        {% if invoices %}
+            {{invoice_table(invoices.values(), request, user_type, is_hidden)}}
+            {% if user_type == 'accountant' and is_hidden %}
+            <p class="underline text-center text-indigo-700 mt-4 cursor-pointer" id="show-all-invoices" >Show all</p>
+            {% endif %}
+        {% else %}
+            {{empty_state(user_type=user_type)}}
+        {% endif %}
+    </div>
+<div class="flex align-items-center justify-between py-4">
+    <div class="table-count">
+
+        {% if invoices %}
+        Page<span>{{ current_page }}</span>out of<span>{{ total_pages }}</span>
+        {% endif %}
+    </div>
+    {% if total_pages > 1 %}
+    <div class="table-action">
+        {% if previous_page is not none %}
+            <a  class="Pre-btn" href="{{previous_page}}">
+                
+                    Previous
+                
+            </a>
+        {% endif %}
+        {% if current_page - 4 > 1 %}
+            <a class="pre-btn" href="/invoice-list?current_page={{ current_page - 5 }}">...</a>
+        {% endif %}
+        {% for page_count in range(total_pages) %}
+            
+            {% if page_count + 1 == current_page %}
+                <a class="pre-btn active" href="#" selected>
+                    
+                        {{ current_page }}
+                    
+                </a>
+            {% elif page_count > current_page - 5 and page_count < current_page + 5 %}
+                <a class="pre-btn" href="/invoice-list?current_page={{ page_count + 1 }}">
+                    
+                        {{ page_count + 1 }}
+                    
+                </a>
+                
+            {% endif %}
+        {% endfor %}
+        {% if total_pages  > current_page + 4 %}
+            <a class="pre-btn" href="/invoice-list?current_page={{ current_page + 5 }}">...</a>
+        {% endif %}
+        {% if next_page is not none %}
+            <a class="pre-btn" href="{{next_page}}">
+                Next
+            </a>
+        {% endif %}
+        
+    </div>
+    {% endif %}
+</div>
+</main>
+<script>
+    const show_invoices = document.getElementById('show-all-invoices');
+    show_invoices?.addEventListener('click', () => {
+        document.getElementById('invoice-table').classList.remove('hidden');
+        show_invoices.classList.add('hidden');
+    })
+
+    function downloadInvoices() {
+        var currentURL = window.location.href;
+
+        var url = new URL(currentURL);
+        var filterByValue = url.searchParams.get('filter_by');
+
+        var baseURL = '/invoice-list/download';
+
+        var fetchURL = filterByValue ? `${baseURL}?filter_by=${filterByValue}` : baseURL;
+
+        fetch(fetchURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((response) => response.blob())
+        .then((blob) => {
+            const currentDate = new Date();
+            const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
+            const day = currentDate.getDate().toString().padStart(2, '0');
+            const year = currentDate.getFullYear();
+            const formattedDate = `${month}-${day}-${year}`;
+            const fileName = `invoice-details-${formattedDate}.csv`;
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+            console.error('Error downloading the CSV:', error);
+    });
+
+    }
+
+</script>
+{% endblock %}

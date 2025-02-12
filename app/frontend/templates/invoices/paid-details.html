@@ -1,0 +1,29 @@
+{% extends "components/sidebar-base.html" %}
+{% from "components/invoices/query-menu.html" import query_menu %}
+{% from "components/invoices/invoice-table.html" import invoice_table %}
+{% from "components/invoices/invoice-empty-state.html" import empty_state %}
+
+
+{% block head %}
+<title>Inbox | Easy Invoice Management</title>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<main class="flex w-full h-screen overflow-y-scroll ">
+    <div class="w-full p-8">
+        <div class="flex items-center justify-between">
+            <h2 class="font-extrabold text-3xl mb-5">Paid Details</h2>
+            <a href="/paid-details/download" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Download CSV</a>
+        </div>
+        <div>
+            {% include 'components/invoices/paid-details-card.html' %}
+        </div>
+        {% if invoices %}
+            {{invoice_table(invoices.values(), request)}}
+        {% else %}
+        {{empty_state(request)}}
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

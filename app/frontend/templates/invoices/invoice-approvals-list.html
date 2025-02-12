@@ -1,0 +1,32 @@
+{% extends "components/sidebar-base.html" %} {% from
+"components/invoices/query-menu.html" import query_menu %} {% from
+"components/invoices/query-accountant-menu.html" import query_accountant_menu %}
+{% from "components/invoices/invoice-table.html" import invoice_table %} {% from
+"components/invoices/invoice-empty-state.html" import empty_state %} {% block
+head %}
+<title>Invoice Approvals List | Easy Invoice Management</title>
+{{ super() }} {% endblock %} {% block content %}
+<main class="flex w-full">
+  <div class="w-full min-h-screen p-8">
+    <h2 class="font-extrabold text-3xl mb-5">Invoice Approvals List</h2>
+    {{ query_menu(request) }} {% if invoices %} {{invoice_table(invoices,
+    request, user_type, is_hidden)}} {% if user_type == 'accountant' and
+    is_hidden %}
+    <p
+      class="underline text-center text-indigo-700 mt-4 cursor-pointer"
+      id="show-all-invoices"
+    >
+      Show all
+    </p>
+    {% endif %} {% else %} {{empty_state(request, user_type=user_type)}} {%
+    endif %}
+  </div>
+</main>
+<script>
+  const show_invoices = document.getElementById("show-all-invoices");
+  show_invoices?.addEventListener("click", () => {
+    document.getElementById("invoice-table").classList.remove("hidden");
+    show_invoices.classList.add("hidden");
+  });
+</script>
+{% endblock %}

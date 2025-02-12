@@ -1,0 +1,29 @@
+{% extends "components/sidebar-base.html" %}
+{% from "components/invoices/single-view.html" import single_invoice_view %}
+{% from "components/approver/approver-rejection-card.html" import approver_rejection_view %}
+
+{% block head %}
+<title>{{data.invoice_id}} | Easy Invoice Management</title>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<main class="w-full max-h-screen overflow-y-scroll">
+    <section class="py-8 px-10">
+        {% if request.query_params.get('message') %}
+        <div class="rounded-md bg-blue-50 p-4 mb-5 flex justify-center">
+            <p class="text-sm text-blue-700">{{request.query_params.get('message')}}</p>
+        </div>
+        {% endif %}
+        {% if request.query_params.get('error') %}
+            <div class="rounded-md bg-red-50 p-4 border border-red-800 mb-5 flex justify-center">
+                <h3 class="text-sm font-medium text-red-800">{{request.query_params.get('error')}}</h3>
+              </div>
+        {% endif %}
+        {{ single_invoice_view(data, approvers, user_type, is_approver_sub_paid, token, is_waiting_for_approval)}}
+        {% if user_type == 'approver' %}
+            {{ approver_rejection_view(data) }}
+        {% endif %}
+    </section>
+</main>
+{% endblock %}
