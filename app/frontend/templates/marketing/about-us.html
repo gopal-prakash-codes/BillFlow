@@ -1,0 +1,41 @@
+{% extends "components/simple-base.html" %}
+{% from "components/marketing/footer.html" import marketing_footer %}
+{% from "components/marketing/navbar.html" import marketing_navbar %}
+
+{% block head %}
+    <title>About Us | Easy Invoice Management</title>
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="mt-6">
+    {{marketing_navbar()}}
+</div>
+
+<main class="py-8">
+    <div class="relative px-4 sm:px-6 lg:px-8">
+
+        <div class="text-lg max-w-prose mx-auto">
+            <h1>
+                <span class="block text-base text-center text-indigo-600 font-semibold tracking-wide uppercase">About Us</span>
+            </h1>
+        </div>
+        <div class="mt-6 prose prose-indigo prose-lg text-gray-500 mx-auto">
+            <ul role="list">
+                <li>Easy Invoice Manager became the SaaS that solved our own problem.</li>
+                <li>We run an successful accounting services SaaS and it has a internal invoicing module for tracking accounts receivables. </li>
+                <li>What was missing and is across the accounting landscape is the back office pre accounting processes and activities.</li>
+                <li>Accountants do not and should not do a do back office or clerical activities.</li>
+                <li>With Easy Invoice Manager we empower the founder or the office staff with the correct process, correct organization and correct data for accountants to complete the financial months closing. </li>
+                <li>And many times the accounting is completed after the month’s end, yet the founder or office staff requires a daily and weekly management tool for payables.</li>
+                <li>Monthly accounting never was good enough to manage payables daily or weekly. </li>
+                <li>This is where Easy Invoice Manager shines.</li>
+            </ul>
+        </div>
+    </div>
+</main>
+
+
+{{ marketing_footer(request) }}
+
+{% endblock %}

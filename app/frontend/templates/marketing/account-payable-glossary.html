@@ -1,0 +1,74 @@
+{% extends "components/simple-base.html" %}
+{% from "components/marketing/footer.html" import marketing_footer %}
+{% from "components/marketing/navbar.html" import marketing_navbar %}
+
+{% block head %}
+<title>Accounts Payable Glossary</title>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="mt-6">
+    {{marketing_navbar()}}
+</div>
+
+<main class="py-8">
+    <div class="relative px-4 sm:px-6 lg:px-8">
+
+        <div class="mt-8">
+            <div class="text-lg max-w-prose mx-auto">
+                <h1 class="block text-base text-indigo-600 font-semibold tracking-wide text-center uppercase">
+                    Accounts Payable Glossary
+                </h1>
+            </div>
+        </div>
+        <div class="mt-8">
+            <div class="text-lg max-w-prose mx-auto">
+                <h2 class="block text-base text-indigo-600 font-semibold tracking-wide">
+                    AP Glossary: A Comprehensive Guide to Accounts Payable Terminology and Concepts
+                </h2>
+            </div>
+            <div class="mt-6 prose prose-indigo prose-lg text-gray-500 mx-auto">
+                <p>
+                    Welcome to the AP glossary page! Whether you're just starting out in the world of accounts payable or looking to expand your knowledge, we're here to help. In this comprehensive guide, we'll cover all the essential terminology and concepts related to AP, from basic definitions to more advanced topics like electronic invoicing and financial statement analysis. We've also included useful links to additional resources so that you can deepen your understanding and stay up-to-date with the latest developments in the field. So whether you're a seasoned pro or a newcomer to AP, let's dive in and explore this vital area of finance together.
+                </p>
+                <div>
+                    <ol role="list">
+                        <li><span class="font-bold">Accounts Payable (AP):</span> A liability account that represents the money a company owes to its vendors or suppliers for <a href="https://en.wikipedia.org/wiki/Accounts_payable" target="_blank">goods or services received but not yet paid</a>.</li>
+                        <li><span class="font-bold">Invoicing:</span> The process of creating and sending an invoice to a customer or client for goods or services provided.</li>
+                        <li><span class="font-bold">Purchase Order (PO):</span> A commercial document issued by a buyer to a seller, indicating the types, quantities, and agreed prices for products or services that the buyer wishes to purchase.</li>
+                        <li><span class="font-bold">Receipt:</span> A document or electronic record that serves as proof of payment or transaction between a buyer and seller.</li>
+                        <li><span class="font-bold">Payment Terms:</span> The agreed-upon conditions under which a vendor or supplier expects to be paid by a buyer or customer.</li>
+                        <li><span class="font-bold">Credit Memo:</span> A document that reduces the amount owed by a customer to a vendor or supplier due to a return, discount, or other adjustment.</li>
+                        <li><span class="font-bold">Accruals:</span> Expenses that have been incurred but not yet paid or recorded in the company's accounting system.</li>
+                        <li><span class="font-bold">Aging Report:</span> A report that lists all outstanding invoices by vendor, showing the age of each invoice in days past due.</li>
+                        <li><span class="font-bold">Disbursement:</span> The act of paying out money from a company's accounts payable to a vendor or supplier.</li>
+                        <li><span class="font-bold">Reconciliation:</span> The process of comparing and adjusting the balance in the company's accounting records to the balance shown on the <a href="https://easyinvoicemanager.com/blog?qb-b=reconciling-vendor-statements-with-an-accounts-payable-automation-saas-service">vendor's statement</a> or invoice.</li>
+                        <li><span class="font-bold">Debit:</span> An accounting entry that represents an increase in an asset or a decrease in a liability or equity account. Debits are typically recorded on the left side of a T-account.</li>
+                        <li><span class="font-bold">Credit:</span> An accounting entry that represents a decrease in an asset or an increase in a liability or equity account. Credits are typically recorded on the right side of a T-account.</li>
+                        <li><span class="font-bold">General Ledger:</span> The main accounting record that contains all the company's accounts, including assets, liabilities, equity, revenue, and expenses.</li>
+                        <li><span class="font-bold">Chart of Accounts:</span> A list of all the accounts used by a company to record its financial transactions, organized by category and assigned a unique account number.</li>
+                        <li><span class="font-bold">Accounts Payable Aging:</span> <a href="https://easyinvoicemanager.com/blog?qb-b=what-is-an-accounts-payable-aging-report">A report</a> that categorizes all outstanding accounts payable by the length of time they have been unpaid, typically in 30-day increments.</li>
+                        <li><span class="font-bold">Vendor:</span> A person or company that supplies goods or services to another company.</li>
+                        <li><span class="font-bold">Accrued Expenses:</span> Expenses that have been incurred but not yet paid, and which are recorded as a liability in the company's accounts.</li>
+                        <li><span class="font-bold">Accounts Payable Turnover Ratio:</span> A financial ratio that measures the number of times a company pays its accounts payable during a given period, typically a year.</li>
+                        <li><span class="font-bold">Early Payment Discount:</span> A <a href="https://easyinvoicemanager.com/blog?qb-b=steps-to-earn-a-cash-discount-from-vendors">reduction in the amount</a> owed to a vendor or supplier if an invoice is paid before the due date. The discount is usually a percentage of the total invoice amount and is specified in the payment terms. For example, a vendor may offer a 2% discount if an invoice is paid within 10 days, but the full amount is due within 30 days. </li>
+                        <li><span class="font-bold">Vendor Master File:</span> A <a href="https://easyinvoicemanager.com/blog?qb-b=maintain-a-master-vendor-file-in-accounts-payable">collection of records</a> containing information about the vendors or suppliers a company uses. The vendor file typically includes the vendor's name, address, contact information, payment terms, and other relevant details, such as tax identification numbers, insurance certificates, and banking information. The vendor file is used by the accounts payable department to manage and process payments to vendors.</li>
+                        <li><span class="font-bold">Invoice Approval:</span> The process of reviewing and authorizing an invoice for payment. In most organizations, the invoice approval process involves several steps; including verifying the accuracy of the invoice details, ensuring that the goods or services have been received, and obtaining appropriate approvals from authorized personnel. The invoice approval process is critical to ensuring that only valid invoices are paid and that the company's financial resources are used effectively.</li>
+                        <li><span class="font-bold">Purchase Order Approval:</span> The process of reviewing and authorizing a standing <a href="https://easyinvoicemanager.com/blog?qb-b=po-vs-non-po-invoices-understanding-the-difference-and-why-it-matters-for-accounts-payable">purchase order</a> before goods or services are ordered from a vendor. Purchase order approval typically involves verifying that the requested items or services are necessary, that the prices are reasonable, and that funds are available to pay for them. Once a purchase order is approved, it serves as a legal contract between the buyer and the vendor.</li>
+                        <li><span class="font-bold">Workflow Automation:</span> The use of technology to automate and streamline business processes, including invoice approval in accounts payable. <a href="https://easyinvoicemanager.com/blog?qb-b=what-is-accounts-payable-automation">Workflow automation</a> can reduce the time and effort required to review and approve invoices, minimize errors, and increase efficiency. It can also provide real-time visibility into the status of invoices, enabling organizations to manage their accounts payable more effectively.</li>
+                        <li><span class="font-bold">Assigned Invoice Approval Rules:</span> The process of assigning specific rules and criteria to different invoices based on various factors, such as the vendor, the amount, the type of goods or services, and the urgency of payment. Assigned invoice approval rules help organizations manage their accounts payable more effectively by streamlining the <a href="https://easyinvoicemanager.com/blog?qb-b=maximizing-invoice-approval-efficiency-why-department-heads-are-better-equipped-than-finance-departments">approval process</a> and ensuring that invoices are reviewed by the appropriate personnel. For example, invoices below a certain threshold may be automatically approved, while invoices above a certain threshold or for certain types of expenses may require additional approvals or documentation.</li>
+                        <li><span class="font-bold">Exception Handling:</span> The process of handling invoices that do not meet the assigned invoice approval rules, such as those with missing or incorrect information, or those that exceed budgeted amounts. Exception handling typically involves reviewing the invoice manually, resolving any discrepancies or issues, and obtaining additional approvals or documentation as needed. Effective exception handling can help organizations reduce errors and ensure that all invoices are processed accurately and efficiently.</li>
+                        <li><span class="font-bold">Purchase Order Matching:</span> The process of comparing the details of an invoice to those of a purchase order, including the quantity, price, and description of goods or services. Purchase order matching helps organizations ensure that they are paying only for goods or services that were actually ordered and received. If there are discrepancies between the invoice and the purchase order, the invoice may be returned to the vendor for correction or further review.</li>
+                        <li><span class="font-bold">Invoice Processing Cycle:</span> The series of steps involved in processing an invoice in accounts payable, from receipt to payment. The invoice processing cycle typically includes invoice receipt and data capture, invoice approval and matching, invoice coding and allocation, payment processing, and vendor account reconciliation. An efficient and effective invoice processing cycle can help organizations reduce errors, manage cash flow, and maintain strong relationships with their vendors.</li>
+                        <li><span class="font-bold">Receiving Report:</span> A document used to record the receipt of goods or services from a vendor. The <a href="https://easyinvoicemanager.com/blog?qb-b=the-importance-of-receiving-reports-in-accounts-payable">receiving report</a> typically includes information about the date of receipt, the quantity and description of items received, and any discrepancies or damages noted at the time of receipt. The receiving report is an important component and is used by accounts payable to verify that the goods or services have been received before processing payment to the vendor.</li>
+                </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{{ marketing_footer(request) }}
+
+{% endblock %}

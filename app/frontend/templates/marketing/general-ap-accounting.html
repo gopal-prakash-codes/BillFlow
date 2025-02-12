@@ -1,0 +1,71 @@
+{% extends "components/simple-base.html" %}
+{% from "components/marketing/footer.html" import marketing_footer %}
+{% from "components/marketing/navbar.html" import marketing_navbar %}
+
+{% block head %}
+<title>General AP Accounting Debits and Credits</title>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="mt-6">
+    {{marketing_navbar()}}
+</div>
+
+<main class="py-8">
+    <div class="relative px-4 sm:px-6 lg:px-8">
+        <div class="text-lg max-w-prose mx-auto mb-4">
+            <h1 class="block text-base text-indigo-600 font-semibold tracking-wide text-center uppercase">
+                General AP Accounting Debits and Credits
+            </h1>
+        </div>
+        <div class="mt-6 prose prose-indigo prose-lg text-gray-500 mx-auto">
+            <h1>Mastering the Basics: Your Guide to General AP Accounting Debits and Credits</h1>
+
+            <p>When an accounts payable invoice is received for a non-material purchase or a business expense, you would typically make the following accounting entries:</p>
+
+            <p><strong>Debit:</strong> Expense Account</p>
+            <p>This represents the business expense you are incurring.</p>
+            <p><strong>Credit:</strong> Accounts Payable</p>
+            <p>This reflects the liability created as you now owe money for the received invoice.</p>
+
+            <p>Here's the breakdown:</p>
+
+            <p><strong>Debit (Increase) the Expense Account:</strong> This is an increase in expenses because you are recognizing the cost associated with the non-material purchase or business expense.</p>
+            <p><strong>Credit (Increase) Accounts Payable:</strong> By crediting the Accounts Payable account, you acknowledge that you owe money to the supplier/vendor. This is a liability on your books until the invoice is paid.</p>
+
+            <p>For example, let's say you receive an invoice for office supplies:</p>
+
+            <p>Debit Office Supplies Expense (or relevant expense account)</p>
+            <p>Credit Accounts Payable</p>
+            <p>This entry reflects that you've incurred an expense for office supplies, and you owe money for that expense.</p>
+
+            <p>Please note that the specific accounts used may vary based on your organization's chart of accounts and accounting practices. It's always a good idea to consult with an accountant or financial professional to ensure accurate and compliant bookkeeping.</p>
+
+            <p>When you receive an accounts payable invoice for a material purchase, the accounting entries would involve inventory accounts to reflect the acquisition of goods. The entries typically include:</p>
+
+            <p><strong>Debit:</strong> Inventory Asset</p>
+            <p>This represents the increase in the value of your inventory.</p>
+            <p><strong>Credit:</strong> Accounts Payable</p>
+            <p>This reflects the liability created as you now owe money for the received invoice.</p>
+
+            <p>Here's the breakdown:</p>
+
+            <p><strong>Debit (Increase) Inventory Asset:</strong> This entry recognizes the cost of the materials purchased and increases the value of your inventory. The specific inventory account may vary based on the nature of the materials (e.g., Raw Materials, Work in Progress, Finished Goods).</p>
+            <p><strong>Credit (Increase) Accounts Payable:</strong> By crediting the Accounts Payable account, you acknowledge that you owe money to the supplier/vendor. This is a liability on your books until the invoice is paid.</p>
+
+            <p>For example, if you purchase raw materials:</p>
+
+            <p>Debit Raw Materials Inventory (or relevant inventory account)</p>
+            <p>Credit Accounts Payable</p>
+            <p>This entry reflects that you've acquired raw materials, and the cost is added to your inventory while recognizing the liability to pay the supplier.</p>
+
+            <p>Again, the specific accounts used may vary based on your organization's chart of accounts and accounting practices, so it's advisable to consult with an accountant or financial professional for precise guidance.</p>
+
+        </div>
+    </div>
+</main>
+
+{{ marketing_footer(request) }}
+
+{% endblock %}

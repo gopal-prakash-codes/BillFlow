@@ -1,0 +1,334 @@
+{% extends "components/simple-base.html" %}
+{% from "components/auth/signup-form.html" import signup_form %}
+{% from "components/marketing/lead-form.html" import lead_form %}
+{% from "components/marketing/navbar.html" import marketing_navbar %}
+{% from "components/marketing/testimonial-section.html" import testimonial_section %}
+{% from "components/payments/pricing-info-card.html" import pricing_info_card %}
+{% from "components/marketing/faq-section.html" import faq_section %}
+{% from "components/marketing/footer.html" import marketing_footer %}
+
+{% block head %}
+<title>Welcome to Automatic Accounts Payable</title>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="relative bg-gray-50 min-h-screen overflow-hidden">
+    <div class="relative pt-6 pb-16 sm:pb-24">
+        <div>
+            {{marketing_navbar()}}
+        </div>
+
+        <main class="mt-16 sm:mt-18">
+            <div class="mx-auto max-w-7xl" style="height: auto;">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div
+                        class="flex flex-col px-4 sm:px-6 sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left lg:flex lg:items-center">
+                        <div>
+                            <img class="mx-auto" src="/static/images/icon-1-(400X400).png" alt="icon">
+                        </div>
+                        <div class="mt-2">
+                            <h1
+                                class="my-6 text-4xl tracking-tight font-extrabold text-slate-800 sm:my-5 sm:leading-none lg:my-6 lg:text-5xl xl:text-6xl">
+                                <span class="md:block">A better way to manage your </span>
+                                <span class="text-indigo-400 md:block">invoices.</span>
+                            </h1>
+
+                        </div>
+                    </div>
+                    <div class="py-16 sm:py-24 lg:mt-0 lg:col-span-6">
+                        {{ signup_form(request) }}
+                        <p class="my-5 px-6 text-base text-gray-700 sm:my-12 sm:text-xl lg:text-lg xl:text-xl"><span
+                                class="font-bold">Eliminate your manual accounts payable process.</span>
+                            Payments are automatically coded, so your accounting team can breathe a sigh of relief.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mx-auto flex flex-col justify-center items-center"
+                style="background-color: #E6E6FA; opacity: 0.8;">
+                {{ lead_form(request) }}
+            </div>
+
+            <div class="mx-auto flex justify-center pt-8">
+                <div class="flex flex-col md:flex-row py-8 items-center">
+                    <div class="mr-2 px-8 font-bold text-3xl text-indigo-400">People saving time and money using Easy
+                        Invoice Manager</div>
+                </div>
+            </div>
+
+            <div class="mx-auto">
+                <div class="px-4 py-5 space-y-6 sm:p-6">
+                    {% set testimonials = [
+                    {
+                    'comment': "By automating business processes, we have reduced costs significantly, improved
+                    information visibility and accuracy, and enhanced the productivity of our team.
+                    Prior to automating, we had 6 accounts payable team members spending a combined 36 hours per month
+                    on bill payments.",
+                    'name': 'Alison Taylor',
+                    'profile_image': '/static/images/four.JPG',
+                    'company': 'Finance Manager'
+                    },
+                    {
+                    'comment': "We looked for ways to cost-effectively manage our rising accounts payable workload. By
+                    moving to intelligent, automated, electronic invoicing, the organization has boosted accuracy,
+                    increased productivity and cut processing times from days to minutes.",
+                    'name': 'Clare Findlay',
+                    'profile_image': '/static/images/two.JPG',
+                    'company': 'Bookkeeper'
+                    },
+                    {
+                    'comment': "Our manual data entry process has been reduced by a minimum of 70%. Since we went live,
+                    EasyInvoiceManager’s solution has enabled the Accounts Payable Department to gain better control of
+                    our incoming supplier invoices and we now have a more efficient process.",
+                    'name': 'Paul Brennan',
+                    'profile_image': '/static/images/nine.JPG',
+                    'company': 'Founder'
+                    },
+                    {
+                    'comment': "Certainly the business goals of achieving a simple solution to resolve invoice queries
+                    promptly was obvious from the first day, due to the ease of accessing detailed information from the
+                    source documents electronically. We have been able to build processes that were once a manual task
+                    into an automated process, thereby saving up to 40hrs per month of staff-time reviewing and
+                    processing invoices.",
+                    'name': 'Emma Taylor',
+                    'profile_image': '/static/images/seven.JPG',
+                    'company': 'Office Manager'
+                    }
+                    ] %}
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        {% for testimonial in testimonials %}
+                        {{ testimonial_section(testimonial) }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="mx-auto" style="background-color: #E6E6FA; opacity: 0.8;">
+                <div class="mx-auto max-w-4xl overflow-hidden">
+                    <div class="px-4 py-5 space-y-6 sm:p-6">
+
+                        <h1 class="font-bold text-2xl text-center" style="color: #1E293B;">Start Using The Application
+                            for Free, No Credit Card Required</h1>
+
+                        {% set payment_plans = [
+                        {
+                        'name': 'Free Plan',
+                        'price': 'Free',
+                        'plan_key': 'free',
+                        'description': 'All the basics for accounts payable automation. No credit card required.',
+                        'included_features': [
+                        'Add 5 Invoices Every Month',
+                        'Cloud storage of invoices',
+                        'Upload invoices with data capture',
+                        'Paid invoice report',
+                        'Payables aging report',
+                        'Code invoice for accounting',
+                        'Payables calendar for weekly payments due'
+                        ]
+                        },
+                        {
+                        'name': 'Premium Plan',
+                        'price': '$29',
+                        'plan_key': 'premium',
+                        'description': "Everything needed to manage your organization's invoices.",
+                        'included_features': [
+                        'Unlimited Invoices',
+                        'Cloud storage of invoices',
+                        'Upload invoices with data capture',
+                        'Paid invoice report',
+                        'Payables aging report',
+                        'Code invoice for accounting',
+                        'Payables calendar for weekly payments due',
+                        'Searchable Invoice Archive',
+                        'Free Accountants Access',
+                        'Bank balance in interface for cashflow management',
+                        'Master Vendor File'
+                        ]
+                        },
+                        {
+                        'name': 'Approval Plan',
+                        'price': '$15',
+                        'title': '/Approver User/month',
+                        'description': 'Invoice Approval Plan',
+                        'included_features': [
+                        'Workflow',
+                        'Custom Tiers',
+                        'Email Invitations',
+                        'Fraud Prevention',
+                        'Attach a Document',
+                        'Review Attachments'
+                        ]
+                        },
+                        {
+                        'name': 'Spend Management',
+                        'price': '$3',
+                        'title': '/Active User/month',
+                        'description': 'For small businesses and freelancers to track expenses and mileage claims.',
+                        'included_features': [
+                        'Minimum 3 Users',
+                        '5 GB Recepient Storage',
+                        '20 Recepient Autoscans',
+                        'Mileage Expenses',
+                        'Customer/Project Tracking'
+                        ]
+                        },
+                        {
+                        'name': 'CashFlowGURU',
+                        'price': '$19',
+                        'plan_key': 'free',
+                        'description': 'Current and future cash flow planning',
+                        'included_features': [
+                        'Project current and future dates',
+                        'Categorize expenditures',
+                        'Analyze real time bank balances',
+                        'Analyze Accounts Payable',
+                        'Analyze Accounts Receivable',
+                        'Shortage email reminders'
+                        ]
+                        }
+                        ]
+                        %}
+                        <div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-8">
+                                {% for plan in payment_plans[0:2] %}
+                                {{ pricing_info_card(plan) }}
+                                {% endfor %}
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                                {% for plan in payment_plans[2:] %}
+                                {{ pricing_info_card(plan) }}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% set faqs = [
+            {
+            'question': 'What is the advantage of using Easy Invoice Manager?',
+            'answer': [
+            '• Data capture during Invoice upload, and no typing necessary',
+            '• Cloud storage of invoices',
+            '• Coding invoices for accounting',
+            '• Tracking current and future pay dates',
+            '• Manage cash flow with real time bank balance',
+            '• Manage vendor balances',
+            '• Get approvals on the invoice payments',
+            '• Get Accounts Payable aging reports',
+            '• Get paid invoice reports',
+            '• No accounting education required'
+            ]
+            },
+            {
+            'question': 'Can I use the free plan forever?',
+            'answer': ['• We provide limited use forever with no charge']
+            },
+            {
+            'question': 'When will Spend Management be operational?',
+            'answer': ['• In December 2022']
+            }
+            ] %}
+            <div id="faq-section" class="mx-auto max-w-7xl mb-8 border p-6 mt-8">
+                <div class="p-6 faq-border">
+                    <h1 class="font-bold text-2xl text-gray-700 text-center">Questions & answers</h1>
+                    <p class="mt-2 text-sm text-gray-600 text-center">Can't find the answer here? <a class="underline"
+                            target="_blank" href="https://myeasyinvoicemanager.freshdesk.com/support/home">Contact
+                            Support</a></p>
+                </div>
+                {% for faq in faqs %}
+                {{ faq_section(faq) }}
+                {% endfor %}
+            </div>
+
+            <div style="background-color: #E6E6FA; opacity: 0.8;">
+                <div class="mx-auto max-w-7xl">
+                    <div class="px-4 py-5 space-y-6 sm:p-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h1 class="text-3xl font-bold">Still Unsure? Step Inside and See<br>What The Future
+                                    Looks Like.</h1>
+                            </div>
+                            <div>
+                                <a href="https://calendly.com/sharp-edge" target="_blank"
+                                    class="flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2">Schedule
+                                    a Demo <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="text-cols" class="grid grid-cols-2 mx:block">
+                <div class="flex flex-col md:flex-col py-8 items-center px-4 md:ml-30 mx:ml-0">
+                    <h3 class="text-3xl font-bold">What is Invoice Approval?</h3>
+                    <div>
+                        <p class="px-4 py-4">An invoice approval system is a software solution that enables accounts payable teams to streamline and automate the manual invoice approval process. Traditional manual workflows can be time-consuming, involving identifying issues with invoices, determining who needs to approve them, and working with various stakeholders to secure approval for payment.</p>
+                        <p class="px-4 py-4">With invoice processing software, AP teams can define and automate the workflow for invoice approval. The system automatically routes invoices for approval, minimizing delays caused by data entry errors or routing mistakes. Complete visibility into the status of invoices and approval history is also provided, allowing for more efficient and effective invoice management.</p>
+                        <p class="px-4 py-4">By automating the invoice approval process, the accounts payable department no longer needs to spend time chasing down employees to manually process invoices. This results in faster invoice processing and allows the AP team to focus on more strategic activities such as cash flow management and audit trails. Overall, an invoice approval system can help businesses save time, reduce errors, and improve their financial management processes.</p>
+                        <p class="px-4 py-4">Stay safe and keep approvers out of your accounting system.</p>
+                        <p class="px-4 py-4 mt-8" style="background-color: #E6E6FA; opacity: 0.8;">With <a href="https://easyinvoicemanager.com" class="text-indigo-600 hover:underline">https://easyinvoicemanager.com</a>, you can purchase AP automation approval workflows for just $15 a month! Simplify your accounts payable process by streamlining approvals and say goodbye to manual invoice processing. Try it out today!                             
+                        </p>
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-col py-8 items-center px-4 md:mr-30 mx:mr-0">
+                    <h3 class="text-3xl font-bold">Separation of Duties</h3>
+                    <div>
+                        <p class="px-4 py-4">The separation of duties is an important concept in accounts payable (AP) processing, especially in small and mid-sized businesses where there may be limited resources and staff. The goal of separating duties is to ensure that no one individual has complete control over all aspects of the AP process, which can help prevent errors, fraud, and other problems.</p>
+                        <p class="px-4 py-4 ">In many organizations, the AP process is divided between back-office employees and the accounting department. </p>
+                        <p class="px-4 py-4">Back-office employees are responsible for receiving, reviewing, and processing invoices</p>
+                        <p class="px-4 py-4">The accounting department is responsible for reconciling accounts and posting invoices in the accounting system.</p>
+                        <p class="px-4 py-4">Making payments is company dependent and sometimes is a founder responsibility.</p>
+                        <p class="px-4 py-4">By separating these duties, businesses can help ensure that there are checks and balances in place to prevent errors or fraud. For example, back-office employees may be responsible for verifying that the goods or services on an invoice were actually received or performed before sending it to the accounting department for payment. Similarly, the accounting department may be responsible for reconciling bank statements to ensure that all payments were made and that there were no unauthorized transactions.</p>
+                        <p class="px-4 py-4">In addition to preventing errors and fraud, the separation of duties can also help businesses comply with regulations and audit requirements. By having clear divisions of responsibility, businesses can provide a clear audit trail that demonstrates that proper controls were in place to prevent errors or fraud.</p>
+                        <p class="px-4 py-4">Overall, the separation of duties is a critical component of effective AP processing. By dividing responsibilities between back-office employees and the accounting department, businesses can ensure that their AP processes are efficient, effective, and compliant with regulations.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+{{ marketing_footer(request) }}
+
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            if (this.classList.contains("active")) {
+                this.querySelector('.arrow-down').style.display = 'none';
+                this.querySelector('.arrow-up').style.display = 'block';
+            } else {
+                this.querySelector('.arrow-down').style.display = 'block';
+                this.querySelector('.arrow-up').style.display = 'none';
+            }
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+</script>
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function () {
+        var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/626edfb77b967b11798d59f8/1g20hjq3u';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        s0.parentNode.insertBefore(s1, s0);
+    })();
+</script>
+<!--End of Tawk.to Script-->
+{% endblock %}

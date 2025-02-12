@@ -1,0 +1,10 @@
+Hi,
+
+There is some trouble while loading image for an Invoice.
+
+Details about the trouble,
+Invoice Id: {{invoice_id}}
+Customer Id: {{customer_id}}
+Company Name: {{company_name}}
+Uploaded On: {{uploaded_on}}
+AWS Image Path: {{aws_image_path}}

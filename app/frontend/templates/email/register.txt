@@ -1,0 +1,18 @@
+Dear {{ user.name }},
+
+Welcome to easyinvoicemanager, your all-in-one solution for managing your accounts payable invoices. We are delighted to have you onboard and are confident that our solution will make your invoice process simple, efficient, and stress-free.
+
+To get started, please follow these steps:
+
+Upload your first invoice in either PDF, JPEG, or JPG format and store it securely in the cloud.
+Manage your invoices by categorizing them as GL account, department or expense type.
+Use our calendar to keep track of your payments and manage your cashflow.
+View all invoices by vendor in the vendor detail page to make communication easier.
+Provide your accountant with helpful reports such as the Accounts Payable aging report and paid invoices report, both of which can be downloaded in a CSV format like MS Excel.
+
+If you have any questions, please don’t hesitate to reach out to our support team at support@myeasyinvoicemanager.freshdesk.com.
+
+Happy organizing!
+
+Best regards,
+Jeff and the easyinvoicemanager team.

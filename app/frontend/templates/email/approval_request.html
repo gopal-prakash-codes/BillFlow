@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approval Request | Easy Invoice Management</title>
+</head>
+<style>
+    .container {
+        width: 30%;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .text-gray {
+        color: gray;
+    }
+
+    .text-black {
+        color: black;
+    }
+
+    .btn {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .review-btn {
+        width: fit-content;
+        padding: 9.5px;
+        outline: none;
+        border: none;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        cursor: pointer;
+        color: white;
+        background-color: rgb(89, 243, 89);
+    }
+
+    table {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+        }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even){background-color: #f2f2f2}
+</style>
+<body>
+    <div class="container">
+        <h3>Hi {{ username }},</h3>
+        <p class="text-gray">Evan's Accounting Firm has payments on Easy Invoice Manager for which you are a <b class="text-black">mandatory</b> approver.</p>
+        <p class="text-gray">Please note that transactions on easy invoicing will never be paid earlier than the<br>requested payment date, even if you approve the payment before that date.</p>
+        <p class="text-gray">Below is a list of payments currently awaiting your approval:</p>
+        <table>
+            <tr>
+                <th>Payee</th>
+                <th>Requested Payment</th>
+                <th>Amount {{ amount_due }}</th>
+            </tr>
+            <tr>
+                
+            </tr>
+        </table>
+        <p class="text-gray">Click the link below to log in and review these payments.</p>
+        <div class="btn">
+            <a href="http://easyinvoicemanager.com/approve/invoice?token={{token}}" class="review-btn">Review Invoice</a>
+        </div>
+    </div>
+</body>
+</html>

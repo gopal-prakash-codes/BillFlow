@@ -1,0 +1,176 @@
+{% extends "components/simple-base.html" %}
+{% from "components/marketing/footer.html" import marketing_footer %}
+{% from "components/marketing/navbar.html" import marketing_navbar %}
+
+{% block head %}
+<title>Paid AP Invoice Journal Entry</title>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="mt-6">
+    {{marketing_navbar()}}
+</div>
+
+<main class="py-8">
+    <div class="relative px-4 sm:px-6 lg:px-8">
+        <div class="text-lg max-w-prose mx-auto mb-4">
+            <h1 class="block text-base text-indigo-600 font-semibold tracking-wide text-center uppercase">
+                Paid AP Invoice Journal Entry
+            </h1>
+        </div>
+        <div class="mt-6 prose prose-indigo prose-lg text-gray-500 max-w-5xl w-full mx-auto mb-6">
+            <p>
+                When a company purchases goods or services on credit that needs to be paid back within a short period of time, it is known as accounts payable. Depending on the terms of the contract, some accounts may need to be paid within 30 days, while others will need to be paid within 60 or 90 days.
+            </p>
+            <p>
+                Determining whether any particular transaction is a debit or a credit is the difficult part. That’s where using t-accounts comes in. Accounting instructors use T accounts to teach students how to do accounting work.
+            </p>
+            <p>
+                After one month, you will pay back the invoice amount to the vendors. That means your liability will go down or will get debited. So below will be a general entry for Account Payable Debit.
+            </p>
+            <p>
+                Test your transaction in the form below and the results will be the correct debit and credit.
+                (no data is saved in our system)
+            </p>
+        </div>
+        <div class="bg-white max-w-5xl w-full mx-auto border border-gray-200 rounded-lg overflow-hidden">
+            <div class="px-4 py-8 sm:px-10">
+                <div>
+                    <form id="paid_form" action="/paid-ap-invoice-general-entry/save" method="POST" class="space-y-6">
+        
+                        {% if request.query_params.get('error') %}
+                        <div class="rounded-md bg-red-50 p-4 border border-red-800">
+                            <h3 class="text-sm font-medium text-red-800">{{request.query_params.get('error')}}</h3>
+                        </div>
+                        {% endif %}
+        
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <label for="name">Vendor name</label>
+                                <input type="text" name="name" id="name" autocomplete="name" required placeholder="Enter name..."
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                            </div>
+                            <div class="flex items-end px-4">
+                                <p class="text-gray-500"><span class="font-bold">Vendor Name: </span>A field to collect the name of the vendor or supplier.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <label for="invoice-number">Invoice Number</label>
+                                <input type="text" name="invoice_number" id="invoice-number" required placeholder="Enter Invoice Id..."
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                            </div>
+                            <div class="flex items-end px-4">
+                                <p class="text-gray-500"><span class="font-bold">Invoice Number: </span>A field to collect the unique identifier for the invoice.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <label for="invoice-date">Invoice Date</label>
+                                <input type="date" name="invoice_date" id="invoice-date"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md" required>
+                            </div>
+                            <div class="flex items-end px-4">
+                                <p class="text-gray-500"><span class="font-bold">Invoice Date: </span>A field to collect the date the invoice was issued.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <label for="invoice-amount">Invoice Amount</label>
+                                <input type="number" step="0.01" min="0.00" name="invoice_amount" id="invoice-amount" placeholder="100.00"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md" required>
+                            </div>
+                            <div class="flex items-end px-4">
+                                <p class="text-gray-500"><span class="font-bold">Invoice Amount: </span>A field to collect the total amount due on the invoice.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <label for="payment-date">Payment Date</label>
+                                <input type="date" name="payment_date" id="payment_date" placeholder="Payment Date"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md" required>
+                            </div>
+                            <div class="flex items-end px-4">
+                                <p class="text-gray-500"><span class="font-bold">Payment Date: </span>A field to collect the date the payment was made.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <label for="payment-amount">Payment Amount</label>
+                                <input type="number" step="0.01" min="0.00" name="payment_amount" id="payment-amount" placeholder="100.00"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md" required>
+                            </div>
+                            <div class="flex items-end px-4">
+                                <p class="text-gray-500"><span class="font-bold">Payment Amount: </span>A field to collect the total amount paid on the invoice.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <label for="payment_method">Payment Method</label>
+                                <select class="form-control text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none mt-5" name="payment_method" style="width: 100%;" required>
+                                    <option value="">---</option>
+                                    <option value="check">Check</option>
+                                    <option value="ach">ACH</option>
+                                    <option value="credit-card">Credit Card</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end px-4">
+                                <p class="text-gray-500"><span class="font-bold">Payment Method: </span>Select Payment Type.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <label for="expense-account">Expense Account</label>
+                                <input type="text" name="expense_account" id="expense-account" placeholder="Enter Expense Account..."
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md" required>
+                            </div>
+                            <div class="flex items-end px-4">
+                                <p class="text-gray-500"><span class="font-bold">Expense Account: </span>A field to collect the account code or name for the expense account being debited.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <label for="payment-account">Payment Account</label>
+                                <input type="text" name="payment_account" id="payment-account" placeholder="Enter Payment Account..."
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md" required>
+                            </div>
+                            <div class="flex items-end px-4">
+                                <p class="text-gray-500"><span class="font-bold">Payment Account: </span>A field to collect the account code or name for the payment account being credited.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div class="flex flex-col">
+                                <label for="memo">Memo</label>
+                                <textarea rows="4" cols="45" name="memo" id="memo" class="border border-gray-300 text-gray-500 rounded-md" placeholder="Enter the memo..." required></textarea>
+                            </div>
+                            <div class="flex items-end px-4">
+                                <p class="text-gray-500"><span class="font-bold">Memo: </span>A field to collect any additional information or notes about the transaction.</p>
+                            </div>
+                        </div>
+
+        
+                        <div>
+                            <button type="submit"
+                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                type="button">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{{ marketing_footer(request) }}
+
+{% endblock %}

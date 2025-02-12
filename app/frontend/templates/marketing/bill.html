@@ -1,0 +1,75 @@
+{% extends "components/simple-base.html" %}
+{% from "components/marketing/footer.html" import marketing_footer %}
+{% from "components/marketing/navbar.html" import marketing_navbar %}
+
+{% block head %}
+    <title>Alternative to Bill.com | Easy Invoice Management</title>
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="mt-6">
+    {{marketing_navbar()}}
+</div>
+
+<main class="py-8">
+    <div class="relative px-4 sm:px-6 lg:px-8">
+
+        <div class="text-lg max-w-prose mx-auto">
+            <h1>
+                <span class="block text-base text-center text-indigo-600 font-semibold tracking-wide uppercase">An alternative to Bill.com for Accounts Payable Automation</span>
+            </h1>
+        </div>
+        <div class="mt-6 prose prose-indigo prose-lg text-gray-500 mx-auto relative">
+            
+            <img src="/static/images/bill_alt.JPG" alt="" style="float: left; width: 12rem; height: 8rem;" />
+            <span>Easy Invoice Manager is an alternative to Bill.com. Often an alternative can be simpler while still offering the main features required, especially if you are a small business and are fine with the main features at a lower price point. </span>
+            
+            <h3>Pricing</h3>
+            <table class="table-auto">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Bill.com</th>
+                    <th>EasyInvoiceManager.com</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Accounts Payable Automation</td>
+                    <td>$45.00</td>
+                    <td>$29.00</td>
+                  </tr>
+                  <tr>
+                    <td>Approver one</td>
+                    <td>$45.00</td>
+                    <td>$15.00</td>
+                  </tr>
+                  <tr>
+                    <td>Approver two</td>
+                    <td>$45.00</td>
+                    <td>$15.00</td>
+                  </tr>
+                  <tr>
+                    <td>Monthly Subscription</td>
+                    <td>$135.00</td>
+                    <td>$59.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            <p>
+                There are many reasons why Bill.com may not be a complete fit for your needs as a business, due to its complexity or even pricing. Yet, the need for management of your accounts payables remains and even the approval of payables that may be of a larger sum than back office staff can approve.
+            </p>
+            <p>
+                The good news is that there are alternatives such as Easy Invoice Manager.com, which are far more affordable for your business.
+            </p>
+            <li style="list-style-type: none;">
+              <a href="https://blog.featured.com/what-are-the-best-bill-com-alternatives" class="text-base text-blue-300 hover:text-blue"> Read More </a>
+            </li>
+        </div>
+    </div>
+</main>
+
+{{ marketing_footer(request) }}
+
+{% endblock %}

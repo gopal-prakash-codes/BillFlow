@@ -1,0 +1,30 @@
+{% extends "components/simple-base.html" %}
+{% from "components/marketing/navbar.html" import marketing_navbar %}
+{% from "components/marketing/footer.html" import marketing_footer %}
+{% from "components/auth/signup-form.html" import signup_form %}
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="easyinvoicemanager.com brings smart AP Invoice automation and new bill payment capabilities to your business. Harness intelligent technology to help streamline your payments process.">
+<meta name="keywords" content="Intelligent Invoice Bill Payment Platform for Businesses | easyinvoicemanager.com">
+<script src="https://app.quickblog.co/js/embed.js?qb_id=3477qqfvyrr3icHfWSWKpfjT77lsMdPuRrO5lYqKL84k"></script>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+<div class="mt-6">
+    {{marketing_navbar()}}
+</div>
+
+<main>
+    <div class="container">
+      <div id="qb-posts"></div>
+    </div>
+</main>
+
+<div style="float: left;width: 100%;">
+  {{ marketing_footer(request) }}
+</div>
+
+{% endblock %}
