@@ -1,0 +1,137 @@
+ {% extends "components/simple-base.html" %}
+ 
+ {% block head %}
+ <title>Admin Home | Easy Invoice Management</title>
+ {{ super() }}
+ {% endblock %}
+ 
+ {% block content %}
+ <main class="w-full h-full overflow-scroll">
+     <nav aria-label="horizontal navbar" class="flex border-b border-zinc-200 px-10 py-2" style="justify-content: flex-end;">
+         <div class="text-sm text-slate-800 p-3 rounded hover:underline hover:gb-slate-50">
+             <a href="/logout">Sign Out</a>
+         </div>
+     </nav>
+     
+     <div class="max-w-6xl mx-auto p-8">
+        <div class="flex items-center justify-end">
+            <button id="download-csv" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Download CSV</button>
+        </div>
+     
+     <div class="flex flex-row w-full">
+         <div id="customers-tab" class="flex-1 font-bold text-3xl text-indigo-600 py-2 mb-4 active-tab cursor-pointer">CUSTOMERS</div>
+         <div id="leads-tab" class="flex-1 font-bold text-3xl text-indigo-600 py-2 mb-4 cursor-pointer">LEADS</div>
+     </div>
+        <p>Hello, admin.</p>
+        <div>
+            <div class="mt-8 flex flex-col" id="customer-section">
+                <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Email</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Company Name</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Plan</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Created On</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    {% for user in users %}
+                                    <tr class="hover:bg-gray-100 hover:cursor-pointer">
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{user.email}}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{user.company_name}}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            {% if not user.paid_plan %}
+                                                Free 
+                                            {% else %}
+                                                {{user.paid_plan | capitalize}}
+                                            {% endif %}
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{user.created_on}}</td>
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 flex flex-col hidden" id="leads-section">
+                <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Create Date</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Company</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Name</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Metadata</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Reference</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    {% for lead in leads %}
+                                    <tr class="hover:bg-gray-100 hover:cursor-pointer">
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{lead.create_date}}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{lead.company}}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{% if lead.name %}{{lead.name}}{% endif %}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{lead.email}}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{lead.meta}}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{% if lead.reference %}{{lead.reference}}{% else %}---{% endif %}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 cursor-pointer underline text-indigo-700"><a href="#">Edit</a></td>
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</main>
+
+<script type="application/javascript">
+    const leadsTab = document.getElementById('leads-tab');
+    const customersTab = document.getElementById('customers-tab');
+    const downloadBtnCSV = document.getElementById('download-csv');
+    let type = "user";
+    leadsTab.addEventListener('click', () => {
+        document.getElementById('customer-section').classList.add('hidden');
+        leadsTab.classList.add('active-tab');
+        customersTab.classList.remove('active-tab');
+        document.getElementById('leads-section').classList.remove('hidden');
+        type = "leads"
+    });
+    customersTab.addEventListener('click', () => {
+        document.getElementById('leads-section').classList.add('hidden');
+        customersTab.classList.add('active-tab');
+        leadsTab.classList.remove('active-tab');
+        document.getElementById('customer-section').classList.remove('hidden');
+        type = "user"
+    });
+
+    downloadBtnCSV.addEventListener('click', () => {
+        fetch(`/download_csv?type=${type}`, {
+            method: 'GET'
+        })
+        .then((response) => response.blob())
+        .then(blob => {
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = `${type}-list.csv`;
+            document.body.appendChild(a);
+            a.click();    
+            a.remove();         
+        });
+    })
+</script>
+
+{% endblock %}

@@ -1,0 +1,301 @@
+{% extends "components/sidebar-base.html" %}
+{% from "components/invoices/invoice-table.html" import invoice_table %}
+{% from "components/vendors/updatable-contact-email.html" import updatable_contact_email %}
+
+{% block head %}
+<title>{{vendor.name}} | Easy Invoice Management</title>
+{{ super() }}
+<style>
+    /* width */
+    .custom-scrollbar-style::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    /* Track */
+    .custom-scrollbar-style::-webkit-scrollbar-track {
+      background: #f1f1f1; 
+    }
+
+    /* Handle */
+    .custom-scrollbar-style::-webkit-scrollbar-thumb {
+      background: #888; 
+    }
+
+    /* Handle on hover */
+    .custom-scrollbar-style::-webkit-scrollbar-thumb:hover {
+      background: #555; 
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="w-full h-full overflow-scroll">
+    <div class="max-w-6xl mx-auto p-8">
+        {% if not vendor.contact_email %}
+
+            <div class="bg-orange-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5" style="background-color: #F9E8C9; color: #F98313;" role="alert">
+                <span class="block sm:inline text-center font-bold">Please do not forget to enter the vendor email address!</span>
+                <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                </span>
+            </div>
+
+        {% endif %}
+        <section class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div class="flex items-center justify-between px-4 py-5 sm:px-6">
+                <h2 class="text-xl leading-6 font-bold text-gray-900">{{vendor.name}}</h2>
+                <button onclick="showPopup();" class="inline-flex items-center px-3 py-2 ml-4 border border-indigo-500 text-sm text-indigo-700 leading-4 font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Edit</button>
+            </div>
+            <div id="errorDiv" class="bg-orange-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5 relative" style="background-color: #F9E8C9; color: #F98313; display: none;" role="error">
+                <span id="errorMessage" class="block sm:inline text-center font-bold"></span>
+                <span class="close absolute top-0 right-0 px-4 py-1 cursor-pointer text-red-500 text-3xl" onclick="hideErrorDiv()">&times;</span>
+            </div>            
+            
+            <!-- Edit Popup -->
+            <div id="popupContainer" class="fixed inset-0 z-50 overflow-hidden hidden max-h-[80vh]">
+                <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                    <!-- Background overlay -->
+                    <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+                    </div>
+            
+                    <!-- Modal Content -->
+                    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <span class="close absolute top-0 right-0 px-4 py-1 cursor-pointer text-red-500 text-3xl" onclick="hidePopup()">&times;</span>
+                            <div class="flex flex-col items-center items-start p-4 rounded-t border-b dark:border-gray-600">
+                                <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                  EDIT VENDOR
+                                </h1>
+                            </div>   
+                            <!-- Your form content goes here -->
+                            <div class="custom-scrollbar-style" style="overflow-y: auto; max-height: calc(80vh - 40px); margin-right: -20px; padding-right: 16px;">
+                            
+                                <form id="vendor-edit-form">
+                                    <!-- Form fields go here -->
+                                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                        <div style="margin-top: 20px; margin-right: 15px; flex: 1;">
+                                            <label for="vendorNumber" class="text-gray-700 font-semibold" style="width: 150px;">Vendor Number</label>
+                                            <input type="number" id="vendorNumber" placeholder="1614" value="{{ vendor.vendor_number if vendor.vendor_number != 0 else ''}}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        <div style="margin-top: 20px; flex: 1;">
+                                            <label for="ExternalVendorId" class="text-gray-700 font-semibold" style="width: 150px;">External Vendor ID</label>
+                                            <input type="number" id="ExternalVendorId"  placeholder="260" value="{{ vendor.external_vendor_id if vendor.external_vendor_id != 0 else ''}}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 15px; flex: 1;">
+                                        <label for="vendorName" class="text-gray-700 font-semibold">Vendor Name</label>
+                                        <input id="vendorName" type="text" placeholder="John Doe" value="{{vendor.name}}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    </div>
+                                    <div style="margin-top: 15px; flex: 1;">
+                                        <label for="addressOne" class="text-gray-700 font-semibold">Address1</label>
+                                        <input id="addressOne" type="text" placeholder="201 south 27th" value="{{ vendor.address_one }}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    </div>
+                                    <div style="margin-top: 15px; flex: 1;">
+                                        <label for="addressTwo" class="text-gray-700 font-semibold">Address2</label>
+                                        <input id="addressTwo" type="text" placeholder="" value="{{ vendor.address_two }}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    </div>
+                                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                        <div style="margin-top: 15px; margin-right: 15px; flex: 1;">
+                                            <label for="city" class="text-gray-700 font-semibold" style="width: 150px;">City</label>
+                                            <input type="text" id="city" placeholder="Omaha" value="{{ vendor.city }}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        <div style="margin-top: 15px; margin-right: 15px; width:70px; flex: 1;">
+                                            <label for="state" class="text-gray-700 font-semibold" style="width: 150px;">State</label>
+                                            <input type="text" id="state"  placeholder="NE" value="{{ vendor.state }}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        <div style="margin-top: 15px; flex: 1;">
+                                            <label for="state" class="text-gray-700 font-semibold" style="width: 150px;">Zip Code</label>
+                                            <input type="number" id="pincode"  placeholder="68131-" value="{{ vendor.pincode if vendor.pincode != 0 else ''}}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>  
+                                    </div>
+                                    <div style="margin-top: 15px; flex: 1;">
+                                        <label for="attention" class="text-gray-700 font-semibold">Attention</label>
+                                        <input id="attention" type="text" placeholder="Payment Department" value="{{ vendor.attention }}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    </div>
+                                    <div style="margin-top: 25px; flex: 1;">
+                                        <div class="text-gray-700 font-bold">Primary Contact</div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; margin-bottom: 10px; margin-left:25px">
+                                        <div style="margin-top: 15px; margin-right: 15px; flex: 1;">
+                                            <label for="phone" class="text-gray-700 font-semibold" style="width: 150px;">Phone</label>
+                                            <input autocomplete="phone" type="text" id="phone" placeholder="( ) -" value="{{ vendor.phone }}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        <div style="margin-top: 15px; flex: 1;">
+                                            <label for="fax" class="text-gray-700 font-semibold" style="width: 150px;">Fax</label>
+                                            <input type="text" id="fax"  placeholder="( ) -" value="{{ vendor.fax }}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; margin-bottom: 5px; margin-left:25px">
+                                        <div style="margin-right: 15px; flex: 1;">
+                                            <label for="parentVendor" class="text-gray-700 font-semibold" style="width: 150px;">Parent Vendor</label>
+                                            <input type="number" id="parentVendor" placeholder="2100" value="{{ vendor.parent_vendor if vendor.parent_vendor != 0 else ''}}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <label for="account" class="text-gray-700 font-semibold" style="width: 150px;">Account#</label>
+                                            <input type="text" id="account"  placeholder="" value="{{ vendor.account }}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; margin-bottom: 10px; margin-left:25px">
+                                        <div style="margin-right: 15px; flex: 1;">
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <label for="taxId" class="text-gray-700 font-semibold" style="width: 150px;">Tax ID</label>
+                                            <input type="text" id="taxId"  placeholder="aN/" value="{{ vendor.tax_id }}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 15px; flex: 1;">
+                                        <label for="note" class="text-gray-700 font-semibold">Note</label>
+                                        <textarea id="note" placeholder="" value="{{ vendor.note }}" class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                                    </div>
+                                
+                                    <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px;">
+
+                                        <button style="background: red; margin-right: 5px;" onclick="hidePopup()" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-offset-2">Close</button>
+
+                                        <button type="submit" onclick="submitForm(event)" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+
+                                    </div>                    
+                                </form>
+                                <!-- ... -->
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div id="vendor-detail" class="border-t border-gray-200 px-4 py-5 sm:px-6">
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-3">
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Date Added</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{vendor.created_on}}</dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Last Invoice Added</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{vendor.last_added_on}}</dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        {{updatable_contact_email(vendor)}}
+                    </div>
+                </dl>
+
+                <!-- Stats -->
+                <div>
+                    <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                        <div class="overflow-hidden">
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Paid</dt>
+                            <dd class="mt-1 text-3xl font-semibold text-gray-900">{{vendor.currency}}{{vendor.total_paid}}</dd>
+                        </div>
+
+                        <div class="overflow-hidden">
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Due</dt>
+                            <dd class="mt-1 text-3xl font-semibold text-gray-900">{{vendor.currency}}{{vendor.total_due}}</dd>
+                        </div>
+
+                        <div class="overflow-hidden">
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Invoices Managed</dt>
+                            <dd class="mt-1 text-3xl font-semibold text-gray-900">{{vendor.total_invoice_count}}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        {% if invoices %}
+        <section id="invoice-table">
+            {{invoice_table(invoices)}}
+        </section>
+        {% endif %}
+    </div>
+</main>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+    });
+    
+    function showPopup() {
+        var popupContainer = document.getElementById("popupContainer");
+        popupContainer.style.display = "block";
+        var viewInvoiceLink = document.getElementById('viewInvoiceLink');
+        viewInvoiceLink.classList.remove('bg-indigo-100');
+    }
+
+    
+    function hidePopup() {
+        var popupContainer = document.getElementById("popupContainer");
+        popupContainer.style.display = "none";
+        viewInvoiceLink.classList.add('bg-indigo-100');
+    }
+    
+    async function submitForm(event) {
+        event.preventDefault();
+        const vendor_number = document.getElementById('vendorNumber').value.trim() || 0;
+        const external_vendor_id = document.getElementById('ExternalVendorId').value.trim() || 0;
+        const pincode = document.getElementById('pincode').value.trim() || 0;
+        const parent_vendor = document.getElementById('parentVendor').value.trim() || 0;
+
+        const formData = {
+            'vendor_name': document.getElementById('vendorName').value,
+            'vendor_number': vendor_number,
+            'external_vendor_id': external_vendor_id,
+            'address_one': document.getElementById('addressOne').value,
+            'address_two': document.getElementById('addressTwo').value,
+            'city': document.getElementById('city').value,
+            'state': document.getElementById('state').value,
+            'pincode': pincode,
+            'attention': document.getElementById('attention').value,
+            'phone': document.getElementById('phone').value,
+            'fax': document.getElementById('fax').value,
+            'parent_vendor': parent_vendor,
+            'account': document.getElementById('account').value,
+            'tax_id': document.getElementById('taxId').value,
+            'note': document.getElementById('note').value
+        };
+        
+        const vendor_data = JSON.stringify(formData);
+
+        await fetch('/vendor/{{vendor.id}}', {
+            method: 'PUT',
+            body: vendor_data,
+            headers: {'Content-Type': 'application/json'}
+        })
+        .then(response => {
+            if (response.ok) {
+                hidePopup();
+                displayError("Vendor Updated Successfully.");
+            } else {
+                response.json().then(data => {
+                    if (data?.error) {
+                        hidePopup();
+                        displayError(data.error);
+                    } else {
+                        alert(`Something went wrong: ${response.status} - ${response.statusText}`);
+                    }
+                });
+            }
+        })
+    }
+
+    function displayError(error) {
+        const errorDiv = document.getElementById('errorDiv');
+        const errorMessageElement = document.getElementById('errorMessage');
+        if (error == 'Vendor Updated Successfully.') {
+            errorMessageElement.innerHTML = error;
+            errorDiv.style.display = 'block';
+            errorDiv.style.backgroundColor = '#9093ee';
+            errorDiv.style.color = '#FFFFFF';
+            errorDiv.setAttribute('role', 'success');
+        } else {
+            errorMessageElement.innerHTML = error;
+            errorDiv.style.display = 'block';
+        }     
+    }
+
+    function hideErrorDiv() {
+        const errorDiv = document.getElementById('errorDiv');
+        errorDiv.style.display = 'none';
+        location.reload();
+    }
+
+</script>
+{% endblock %}

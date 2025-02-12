@@ -1,0 +1,493 @@
+{% extends "components/sidebar-base.html" %}
+{% include "components/payments/payment-popup.html" %}
+{% from "components/approver/approver-tier-card.html" import approver_tier_card %}
+
+{% block head %}
+<title>Your Account Settings</title>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<main class="flex-1">
+    <div class="max-w-4xl mx-auto my-5 p-10" x-data="{
+        fullName: '{{user.name}}',
+        companyName: '{{user.organization.name}}',
+        editFullName: false,
+        editCompanyName: false,
+        updateFullName() {
+            if (this.fullName === '') return
+            let fullName = this.fullName;
+            this.fullName = '';
+
+            fetch('/settings/full_name', {
+                method: 'PATCH',
+                body: JSON.stringify({'full_name': fullName}),
+                headers: {'Content-Type': 'application/json'}
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload()
+                } else {
+                    alert(`Something went wrong: ${response.status} - ${response.statusText}`);
+                }
+            })
+        },
+        updateCompanyName() {
+            if (this.companyName === '') return
+
+            let companyName = this.companyName;
+            this.companyName = '';
+
+            fetch('/settings/company_name', {
+                method: 'PATCH',
+                body: JSON.stringify({'company_name': companyName}),
+                headers: {'Content-Type': 'application/json'}
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload()
+                } else {
+                    alert(`Something went wrong: ${response.status} - ${response.statusText}`);
+                }
+            })
+        },
+    }">
+
+        {% if request.query_params.get('message') %}
+        <div class="rounded-md bg-blue-50 p-4 mb-5 ">
+            <p class="text-sm text-blue-700">{{request.query_params.get('message')}}</p>
+        </div>
+        {% endif %}
+
+        <div class="flex flex-row w-full">
+            <div id="settings-tab" class="flex-1 font-bold text-3xl text-indigo-600 py-2 mb-4 active-tab cursor-pointer shadow-lg"
+                active>Settings</div>
+            <div id="add-user-tab" class="flex-1 font-bold text-3xl text-indigo-600 py-2 mb-4 cursor-pointer shadow-xl">Add Users
+            </div>
+            <div id="manager-tab" class="flex-1 font-bold text-3xl text-indigo-600 py-2 mb-4 cursor-pointer shadow-xl">Manager
+            </div>
+        </div>
+
+        <div id="settingsTabSection">
+            <header>
+                <h2 class="text-xl leading-6 font-bold text-gray-900">Account Settings</h2>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">Your account information and corresponding settings.</p>
+            </header>
+
+            <div class="mt-5 border-t border-gray-200">
+                <dl class="divide-y divide-gray-200">
+                    <div class="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-gray-500">Full Name</dt>
+                        <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0">
+                            <div x-cloak x-show="!editFullName">
+                                <span class="flex-grow">{{user.name}}</span>
+                            </div>
+                            <div x-cloak x-show="editFullName">
+                                <form @submit.prevent="updateFullName()">
+                                    <input type="text" x-model="fullName" placeholder="{{user.name}}"
+                                        class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                        required />
+                                    <button type="submit"
+                                        class="mt-1 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                                </form>
+                            </div>
+                            </form>
+                        </dd>
+                        <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0">
+                            <div x-cloak x-show="!editFullName">
+                                <button @click="editFullName=true" type="button"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-md font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Edit</button>
+                            </div>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div class="border-t border-gray-200">
+                <dl class="divide-y divide-gray-200">
+                    <div class="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-gray-500">Email address</dt>
+                        <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0">
+                            <span class="flex-grow">{{user.email}}</span>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div class="border-t border-gray-200">
+                <dl class="divide-y divide-gray-200">
+                    <div class="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-gray-500">Company Name</dt>
+                        <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0">
+                            <div x-cloak x-show="!editCompanyName">
+                                <span class="flex-grow">{{user.organization.name}}</span>
+                            </div>
+                            <div x-cloak x-show="editCompanyName">
+                                <form @submit.prevent="updateCompanyName()">
+                                    <input type="text" x-model="companyName" placeholder="{{user.organization.name}}"
+                                        class="w-full rounded-md text-sm font-normal text-gray-700 placeholder-gray-300 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                        required />
+                                    <button type="submit"
+                                        class="mt-1 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                                </form>
+                            </div>
+                            </form>
+                        </dd>
+                        <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0">
+                            <div x-cloak x-show="!editCompanyName">
+                                <button @click="editCompanyName=true" type="button"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-md font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Edit</button>
+                            </div>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div class="border-t border-gray-200">
+                <dl class="divide-y divide-gray-200">
+                    <div class="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-gray-500">Sign Out</dt>
+                        <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0">
+                            <a href="/logout"
+                                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-md font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Sign Out Now
+                            </a>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div class="border-t border-gray-200">
+                <dl class="divide-y divide-gray-200">
+                    <div class="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-gray-500">Password</dt>
+                        <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0">
+                            <form action="/settings/reset-password" method="POST">
+                                <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-md font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Get Reset Password Link
+                                </button>
+                            </form>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            {% if user.stripe_session_id %}
+            <div class="border-t border-gray-200">
+                <dl class="divide-y divide-gray-200">
+                    <div class="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-gray-500">Payment Plan</dt>
+                        <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0">
+                            <form action="/create-portal-session" method="POST">
+                                <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-md font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Manage Payment Plan
+                                </button>
+                            </form>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            {% else %}
+            <div class="border-t border-gray-200">
+                <dl class="divide-y divide-gray-200">
+                    <div class="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-gray-500">Payment Plan ({% if user.paid_plan %}{{user.paid_plan}}{% else %}Free{%endif%})</dt>
+                        <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0">
+                            <a href="/select-plan"
+                                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-md font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Upgrade Plan
+                            </a>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+            {% endif %}
+            <div class="mt-5 border-t border-gray-200">
+                <h3 class="mt-5">Invite your accountant to view invoices.</h3>
+                <form method="POST" action="/invite-accountant" class="w-full max-w-sm mt-5">
+                    <div class="md:flex md:items-center mb-6">
+                        <div class="md:w-1/3">
+                            <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                for="inline-full-name">
+                                Name
+                            </label>
+                        </div>
+                        <div class="md:w-2/3">
+                            <input
+                                class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                name="accountant_name" type="text" placeholder="John Doe">
+                        </div>
+                    </div>
+                    <div class="md:flex md:items-center mb-6">
+                        <div class="md:w-1/3">
+                            <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                for="accountant_email">
+                                Email
+                            </label>
+                        </div>
+                        <div class="md:w-2/3">
+                            <input type="text" name="accountant_email" autocomplete="email"
+                                placeholder="john@company.com" required
+                                class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit"
+                            class="flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Send
+                            Invitation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="hide" id="addUserTabSection">
+            <header>
+                <h2 class="text-xl leading-6 font-bold text-gray-900">Just right for small businesses</h2>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">Invite other people from your company, your accountant
+                    or bookkeeper to your account. Easily set up their roles so that you can review and approve payments
+                    before they’re sent. Share the responsibility, but keep control.</p>
+            </header>
+            <div class="mt-5 border-t border-gray-200">
+                <dl class="divide-y divide-gray-200">
+                    <div class="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-gray-500">Payment Plan ({% if approver_subscription
+                            %}{{approver_subscription}}{% else %}Zero Approvers{%endif%})</dt>
+                        <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0">
+                            <button href="/select-plan"
+                                id="show-approver-popup"
+                                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-md font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Upgrade Approver Plan
+                            </button>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+            <div id="invite-approver-section" class="{% if not tier_setting_1 %}hidden{% endif %}">
+                <div class="flex flex-row items-center">
+                    <h3 id="add-approver" class="flex-1 font-bold text-3xl text-indigo-600 py-2 mb-4 cursor-pointer mt-5">ADD APPROVER</h3>
+                    <button id="edit-tier" class="inline-flex items-center px-3 py-2 text-2xl underline leading-4 font-medium rounded-md shadow-sm text-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Edit Tier</button>
+                </div>
+                <form action="/approver/invite" method="POST" class="space-y-6">
+                    <div>
+                        <label for="first_name" class="text-gray-700 font-semibold">First name</label>
+                        <input type="text" name="first_name" id="first_name" placeholder="Enter First Name" required class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                    </div>
+    
+                    <div>
+                        <label for="last_name" class="text-gray-700 font-semibold">Last name</label>
+                        <input id="last_name" name="last_name" type="text" placeholder="Enter Last Name" required class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                    </div>
+    
+                    <div>
+                        <label for="email" class="text-gray-700 font-semibold">Email*</label>
+                        <input type="email" name="email" id="email" autocomplete="email" placeholder="Enter Email" required class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                    </div>
+    
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Invite</button>
+                    </div>
+                </form>
+                <div class="flex justify-center text-3xl py-4" style="color: green;">{{ max_approvers_raw }} Approver plan is purchased</div>
+                <div>
+                    <table class="min-w-full divide-y divide-gray-300">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">First Name</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Last Name</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Approval Tier</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            {% for approver in approvers %}
+                            <tr class="hover:bg-gray-100">
+                                {{approvers.approval_tier}}
+                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{approver.first_name}}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{approver.last_name}}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{approver.email}}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    <select
+                                        class="tiers-select"
+                                        onChange="assignTier(this, '{{ approver.id }}')"
+                                        class="form-control text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" name="tiers-list">
+                                        <option value="None" {% if approver.approval_tier == "None" %}selected{% endif %}>None</option>
+                                        <option value="Tier 1" {% if approver.approval_tier == "Tier 1" %}selected{% endif %}>Tier 1</option>
+                                        <option value="Tier 2" {% if approver.approval_tier == "Tier 2" %}selected{% endif %}>Tier 2</option>
+                                        <option value="Tier 3" {% if approver.approval_tier == "Tier 3" %}selected{% endif %}>Tier 3</option>
+                                    </select>
+                                </td>
+                                <td class="flex flex-row justify-center py-4 hover:cursor-pointer">
+                                    <a class="p-3 bg-indigo-600 rounded-xl">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                        </svg>
+                                    </a>
+                                    &nbsp;
+                                    <a class="p-3 rounded-xl" style="background-color: red;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg> 
+                                    </a>                                                                         
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="slideout" class="rounded overflow-y-scroll {% if tier_setting_1 or approver_subscription %}invisible{% endif %} {% if not tier_setting_1 and approver_subscription %}permission-set{% endif %} shadow-lg bg-gray-50 p-5 absolute top-0 ease-linear duration-300" style="width: 60%; right: -1596px;">
+            <header class="mt-5">
+                <div class="flex justify-between">
+                    <h2 class="text-xl leading-6 font-bold text-gray-900">Assign Advanced Approval Permission Sets</h2>
+                    {% if tier_setting_1 %}
+                    <h2 class="cursor-pointer" id="close-slideout">X</h2>
+                    {% endif %}
+                </div>
+                <div class="flex-1 font-bold text-xl" style="color: rgb(61, 162, 245);">
+                <a href="https://myeasyinvoicemanager.freshdesk.com/support/solutions/articles/73000589103-set-up-approval-tiers" target="_blank" class="underline text-base">How To Instructions</a>
+                </div>
+            </header>
+            {{ approver_tier_card(tier_setting_1, tier_setting_2, tier_setting_3) }}
+        </div>
+        <!--Manager Section-->
+        <div class="hide" id="managerTabSection">
+            <header>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">Our Corporate Plan is for larger teams, granting superuser privileges that enable seamless oversight of staff Accounts Payable activities. 
+                    Elevate control and streamline management as you effortlessly navigate and optimize your team's financial processes.</p>
+            </header>
+           
+            <div id="invite-apworker-section">
+                <div class="flex flex-row items-center">
+                    <h3 id="add-approver" class="flex-1 font-bold text-3xl text-indigo-600 py-2 mb-4 cursor-pointer mt-5">ADD STAFF AP WORKER ACCT</h3>
+                </div>
+                <form action="/invite-to-create-passwd" method="POST" class="space-y-6">
+                    <div>
+                        <label for="first_name" class="text-gray-700 font-semibold">First name</label>
+                        <input type="text" name="first_name" id="first_name" placeholder="Enter First Name" required class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                    </div>
+    
+                    <div>
+                        <label for="last_name" class="text-gray-700 font-semibold">Last name</label>
+                        <input id="last_name" name="last_name" type="text" placeholder="Enter Last Name" required class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                    </div>
+    
+                    <div>
+                        <label for="email" class="text-gray-700 font-semibold">Email*</label>
+                        <input type="email" name="email" id="email" autocomplete="email" placeholder="Enter Email" required class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border px-2 py-2 border-gray-300 rounded-md">
+                    </div>
+    
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Invite to create password</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</main>
+
+<script type="application/javascript">
+    function set_edit_mode() {
+        const slideout = document.getElementById('slideout');
+        slideout.classList.add('invisible');
+        document.querySelector("#companyInput").classList.remove("invisible");
+        document.querySelector("#companyInput").classList.add("visible");
+    }
+</script>
+
+<script type="application/javascript">
+    const addUserTab = document.getElementById('add-user-tab');
+    const settingsTab = document.getElementById('settings-tab');
+    const managerTab = document.getElementById('manager-tab');
+    const editTier = document.getElementById('edit-tier');
+    const closeSlideOut = document.getElementById('close-slideout');
+    window.addEventListener('load', (event) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('payment')) {
+            let isPermissionSet = slideout.classList.contains('permission-set');
+            if (isPermissionSet) {
+                slideout.style.right = 0;
+                slideout.classList.remove('invisible');
+            }
+            addUserTab.classList.add('active-tab');
+            settingsTab.classList.remove('active-tab');
+            managerTab.classList.remove('active-tab');
+            document.getElementById('settingsTabSection').classList.add("hide");
+            document.getElementById('addUserTabSection').classList.remove("hide");
+            document.getElementById('managerTabSection').classList.remove("hide");
+        }
+    })
+    addUserTab?.addEventListener('click', () => {
+        let isPermissionSet = slideout.classList.contains('permission-set');
+        if (isPermissionSet) {
+            slideout.style.right = 0;
+            slideout.classList.remove('invisible');
+        }
+        addUserTab.classList.add('active-tab');
+        settingsTab.classList.remove('active-tab');
+        managerTab.classList.remove('active-tab');
+        document.getElementById('settingsTabSection').classList.add("hide");
+        document.getElementById('managerTabSection').classList.add("hide");
+        document.getElementById('addUserTabSection').classList.remove("hide");
+    });
+    settingsTab?.addEventListener('click', () => {
+        slideout.style.right = -1596;
+        slideout.classList.add('invisible');
+        settingsTab.classList.add('active-tab');
+        addUserTab.classList.remove('active-tab');
+        managerTab.classList.remove('active-tab');
+        document.getElementById('addUserTabSection').classList.add("hide");
+        document.getElementById('managerTabSection').classList.add("hide");
+        document.getElementById('settingsTabSection').classList.remove("hide");
+    });
+    managerTab?.addEventListener('click', () => {
+        slideout.style.right = -1596;
+        slideout.classList.add('invisible');
+        managerTab.classList.add('active-tab');
+        settingsTab.classList.remove('active-tab');
+        addUserTab.classList.remove('active-tab');
+        document.getElementById('addUserTabSection').classList.add("hide");
+        document.getElementById('settingsTabSection').classList.add("hide");
+        document.getElementById('managerTabSection').classList.remove("hide");
+    });
+    editTier?.addEventListener('click', () => {
+        slideout.classList.remove('invisible');
+        slideout.style.right = 0;
+    });
+    closeSlideOut?.addEventListener('click', () => {
+        slideout.style.right = -1596;
+        slideout.classList.add('invisible');
+    });
+</script>
+
+<script>
+    function assignTier(selectedTier, approver_id) {
+        const formData = new FormData();
+        formData.append("selected_tier", selectedTier.value);
+        formData.append("approver_id", approver_id);
+        fetch('/assign-tier', {
+            method: 'POST',
+            body: formData
+        })
+        .then((response) => response.json())
+        .then(data => console.log(data))
+    }
+
+</script>
+
+<script>
+    let approverPopup = document.getElementById("show-approver-popup");
+    approverPopup.addEventListener('click', () => {
+        document.getElementById('payment-popup').classList.remove('hidden');
+    });
+
+    document.getElementById("cancelBtn").addEventListener('click', () => {
+        document.getElementById('payment-popup').classList.add('hidden');
+        window.location.reload();
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "components/sidebar-base.html" %}
+{% from "components/vendors/vendor-card.html" import vendor_card %}
+{% from "components/invoices/invoice-empty-state.html" import empty_state %}
+
+{% block head %}
+<title>Vendors | Easy Invoice Management</title>
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<main class="w-full h-full overflow-scroll">
+    <div class="p-8">
+        <div class="flex items-center justify-between px-4 py-5 sm:px-6">
+            <h2 class="font-extrabold text-3xl mb-5">Vendors</h2>
+            <a href="/download-master-vendor-file" id="master-vendor-download" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Master Vendor List Download</a>
+        </div>
+
+        {% if vendors %}
+        <section class="flex justify-center">
+            <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {% for vendor in vendors %}
+                <li>
+                    {{vendor_card(vendor)}}
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% else %}
+            {{empty_state()}}
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
